@@ -6,7 +6,13 @@
 <title>MamaShield Baby Vaccine Tracker — Blessing's Vestule</title>
 <meta name="description" content="Free Nigerian baby vaccine tracker for working mums. Track NPI immunization schedule, get Google Calendar reminders with sound alerts."/>
 <meta name="theme-color" content="#1A6B6B"/>
-<link rel="manifest" href="data:application/json,{&quot;name&quot;:&quot;MamaShield Tracker&quot;,&quot;short_name&quot;:&quot;MamaShield&quot;,&quot;start_url&quot;:&quot;.&quot;,&quot;display&quot;:&quot;standalone&quot;,&quot;background_color&quot;:&quot;%23FAFAF6&quot;,&quot;theme_color&quot;:&quot;%231A6B6B&quot;,&quot;icons&quot;:[{&quot;src&quot;:&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%231A6B6B'/%3E%3Ctext y='.9em' font-size='70' x='15'%3E🛡️%3C/text%3E%3C/svg%3E&quot;,&quot;sizes&quot;:&quot;any&quot;,&quot;type&quot;:&quot;image/svg+xml&quot;}]}"/>
+<link rel="manifest" href="data:application/json,{&quot;name&quot;:&quot;MamaShield Tracker&quot;,&quot;short_name&quot;:&quot;MamaShield&quot;,&quot;start_url&quot;:&quot;.&quot;,&quot;display&quot;:&quot;standalone&quot;,&quot;background_color&quot;:&quot;%231A6B6B&quot;,&quot;theme_color&quot;:&quot;%231A6B6B&quot;,&quot;icons&quot;:[{&quot;src&quot;:&quot;data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%231A6B6B'/><path d='M50 15 L80 28 L80 52 C80 68 65 80 50 87 C35 80 20 68 20 52 L20 28 Z' fill='%23C4853A'/><path d='M50 20 L75 31 L75 52 C75 66 62 77 50 83 C38 77 25 66 25 52 L25 31 Z' fill='%231A6B6B'/><text x='50' y='62' font-family='Arial' font-weight='bold' font-size='28' fill='white' text-anchor='middle'>MS</text></svg>&quot;,&quot;sizes&quot;:&quot;any&quot;,&quot;type&quot;:&quot;image/svg+xml&quot;}]}"/>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%231A6B6B'/><path d='M50 15 L80 28 L80 52 C80 68 65 80 50 87 C35 80 20 68 20 52 L20 28 Z' fill='%23C4853A'/><path d='M50 20 L75 31 L75 52 C75 66 62 77 50 83 C38 77 25 66 25 52 L25 31 Z' fill='%231A6B6B'/><text x='50' y='62' font-family='Arial' font-weight='bold' font-size='28' fill='white' text-anchor='middle'>MS</text></svg>"/>
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%231A6B6B'/><path d='M50 15 L80 28 L80 52 C80 68 65 80 50 87 C35 80 20 68 20 52 L20 28 Z' fill='%23C4853A'/><path d='M50 20 L75 31 L75 52 C75 66 62 77 50 83 C38 77 25 66 25 52 L25 31 Z' fill='%231A6B6B'/><text x='50' y='62' font-family='Arial' font-weight='bold' font-size='28' fill='white' text-anchor='middle'>MS</text></svg>"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="MamaShield"/>
+<meta name="mobile-web-app-capable" content="yes"/>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet"/>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -558,27 +564,4 @@ function tapGiven(i){
     if(allGiven)last.outerHTML=`<span style="font-size:11px;font-weight:700;color:var(--given);margin-left:auto">✓ All given</span>`;
     else if(anyMissed)last.outerHTML=`<span style="font-size:11px;font-weight:700;color:var(--missed);margin-left:auto">⚠️ Overdue</span>`;
     else if(anySoon)last.outerHTML=`<span style="font-size:11px;font-weight:700;color:var(--soon);margin-left:auto">Due soon</span>`;
-    else last.outerHTML=`<span style="font-size:11px;font-weight:700;color:transparent;margin-left:auto">—</span>`;}
-  // refresh gcal list
-  const nameEl=document.getElementById('tName');if(nameEl)buildGCalList(nameEl.textContent.replace(/👧|👦/g,'').replace("'s Vaccine Tracker",'').trim());
-  updateSummary();
-}
-function updateSummary(){
-  const g=given.filter(Boolean).length,m=VAX.filter((_,i)=>getState(i)==='missed').length,p=VAX.filter((_,i)=>!given[i]).length;
-  document.getElementById('sGiven').textContent=g;document.getElementById('sMissed').textContent=m;document.getElementById('sPending').textContent=p;
-  document.getElementById('tProgNum').textContent=`${g} / ${VAX.length} given`;
-  document.getElementById('tProgFill').style.width=`${Math.round(g/VAX.length*100)}%`;
-}
-function reset(){
-  given=[];hospitals=[];VAX=[];gender='';
-  ['sName','sDob','sMum','sClinic','sBlood'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('btnGirl').className='gender-btn girl';document.getElementById('btnBoy').className='gender-btn boy';
-  ['c1','c2','c3','c4'].forEach(id=>document.getElementById(id).checked=false);
-  document.getElementById('proceedBtn').disabled=true;
-  document.getElementById('tracker').style.display='none';document.getElementById('setupScreen').style.display='none';document.getElementById('consentScreen').style.display='block';
-  window.scrollTo({top:0,behavior:'smooth'});
-}
-document.getElementById('sDob').max=new Date().toISOString().split('T')[0];
-</script>
-</body>
-</html>
+    else last.outerHTML=`<span style="font
