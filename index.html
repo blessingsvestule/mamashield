@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>MamaShield Baby Vaccine Tracker — Blessing's Vestule</title>
+<meta name="description" content="Free Nigerian baby vaccine tracker for working mums. Track NPI immunization schedule, get Google Calendar reminders with sound alerts."/>
+<meta name="theme-color" content="#1A6B6B"/>
+<link rel="manifest" href="data:application/json,{&quot;name&quot;:&quot;MamaShield Tracker&quot;,&quot;short_name&quot;:&quot;MamaShield&quot;,&quot;start_url&quot;:&quot;.&quot;,&quot;display&quot;:&quot;standalone&quot;,&quot;background_color&quot;:&quot;%23FAFAF6&quot;,&quot;theme_color&quot;:&quot;%231A6B6B&quot;,&quot;icons&quot;:[{&quot;src&quot;:&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%231A6B6B'/%3E%3Ctext y='.9em' font-size='70' x='15'%3E🛡️%3C/text%3E%3C/svg%3E&quot;,&quot;sizes&quot;:&quot;any&quot;,&quot;type&quot;:&quot;image/svg+xml&quot;}]}"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --teal:#1A6B6B;--teal2:#2A9090;--teal-light:#E8F5F5;--teal-pale:#F2FAFA;
+  --gold:#C4853A;--gold-light:#FEF4E8;
+  --dark:#1C2B2B;--mid:#4A5E5E;--soft:#8AABAB;--border:#D0E8E8;
+  --cream:#FAFAF6;--white:#fff;
+  --given:#1E7A50;--given-bg:#E8F7EF;--given-border:#A8D8C0;
+  --missed:#C0392B;--missed-bg:#FDEDEC;--missed-border:#F5A9A0;
+  --soon:#B85C00;--soon-bg:#FEF4E8;--soon-border:#F0C080;
+  --future:#4A5E5E;--future-bg:#F4F8F8;--future-border:#D0E8E8;
+  --pink:#C2185B;--pink-bg:#FDE8EF;--pink-border:#F5A0C0;
+  --blue:#1565C0;--blue-bg:#E8EFF8;--blue-border:#A0C0F0;
+}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--dark);min-height:100vh}
+
+/* ── INSTALL BANNER ── */
+#installBanner{background:linear-gradient(135deg,#0D4040,#1A6B6B);padding:.75rem 1rem;display:none;position:sticky;top:0;z-index:200}
+#installBanner.show{display:block}
+.install-inner{max-width:480px;margin:0 auto;display:flex;align-items:center;gap:10px}
+.install-icon{font-size:1.4rem;flex-shrink:0}
+.install-text{flex:1;font-size:12px;color:#fff;line-height:1.45}
+.install-text strong{font-weight:700}
+.install-btn{background:#fff;color:var(--teal);border:none;border-radius:8px;padding:6px 12px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0}
+.install-close{color:rgba(255,255,255,.6);background:none;border:none;font-size:1.2rem;cursor:pointer;flex-shrink:0;padding:0 4px}
+
+/* ── SAVE TO PHONE MODAL ── */
+#saveModal{display:none;position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.5);align-items:flex-end;justify-content:center}
+#saveModal.open{display:flex}
+.save-sheet{background:#fff;border-radius:20px 20px 0 0;padding:1.5rem;width:100%;max-width:480px;max-height:85vh;overflow-y:auto}
+.save-sheet h2{font-family:'DM Serif Display',serif;font-size:1.2rem;color:var(--teal);margin-bottom:.25rem}
+.save-sheet .sub{font-size:13px;color:var(--soft);margin-bottom:1.25rem;line-height:1.5}
+.os-tab{display:flex;gap:8px;margin-bottom:1.25rem}
+.os-btn{flex:1;padding:10px;border-radius:10px;border:1.5px solid var(--border);background:var(--teal-pale);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;text-align:center;transition:all .2s;color:var(--mid)}
+.os-btn.active{border-color:var(--teal);background:var(--teal);color:#fff}
+.os-steps{display:none}
+.os-steps.show{display:block}
+.os-step{display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;padding:10px 12px;background:var(--teal-pale);border-radius:10px}
+.os-num{width:24px;height:24px;border-radius:50%;background:var(--teal);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.os-text{font-size:13px;color:var(--mid);line-height:1.5}
+.os-text strong{color:var(--dark);font-weight:600}
+.close-sheet{width:100%;padding:12px;background:var(--teal);color:#fff;border:none;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;margin-top:.5rem}
+
+/* ── CALENDAR SOUND MODAL ── */
+#soundModal{display:none;position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.5);align-items:flex-end;justify-content:center}
+#soundModal.open{display:flex}
+.sound-sheet{background:#fff;border-radius:20px 20px 0 0;padding:1.5rem;width:100%;max-width:480px;max-height:90vh;overflow-y:auto}
+.sound-sheet h2{font-family:'DM Serif Display',serif;font-size:1.2rem;color:var(--teal);margin-bottom:.25rem}
+.sound-sheet .sub{font-size:13px;color:var(--soft);margin-bottom:1rem;line-height:1.5}
+.sound-os-tab{display:flex;gap:8px;margin-bottom:1.1rem}
+.sound-os-btn{flex:1;padding:9px;border-radius:10px;border:1.5px solid var(--border);background:var(--teal-pale);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;text-align:center;transition:all .2s;color:var(--mid)}
+.sound-os-btn.active{border-color:var(--gold);background:var(--gold);color:#fff}
+.sound-steps{display:none}
+.sound-steps.show{display:block}
+.sound-step{display:flex;gap:10px;align-items:flex-start;margin-bottom:8px;padding:10px 12px;background:var(--gold-light);border-radius:10px;border:1px solid var(--soon-border)}
+.sound-num{width:24px;height:24px;border-radius:50%;background:var(--gold);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.sound-text{font-size:13px;color:var(--mid);line-height:1.5}
+.sound-text strong{color:var(--dark);font-weight:600}
+.warning-box{background:var(--missed-bg);border:1px solid var(--missed-border);border-radius:10px;padding:10px 12px;margin-bottom:1rem;font-size:12px;color:var(--missed);line-height:1.5}
+.warning-box strong{font-weight:700}
+.close-sound{width:100%;padding:12px;background:var(--teal);color:#fff;border:none;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;margin-top:.5rem}
+
+/* ── CONSENT ── */
+#consentScreen{max-width:480px;margin:0 auto;padding:2rem 1rem 3rem}
+.consent-hero{background:linear-gradient(135deg,#1A6B6B,#0D4040);border-radius:20px;padding:1.75rem;margin-bottom:1.5rem;position:relative;overflow:hidden}
+.consent-hero::after{content:'🛡️';position:absolute;right:-10px;bottom:-18px;font-size:6rem;opacity:.08;pointer-events:none}
+.brand{font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:8px}
+.consent-hero h1{font-family:'DM Serif Display',serif;font-size:1.5rem;color:#fff;line-height:1.25;margin-bottom:6px}
+.consent-hero p{font-size:13px;color:rgba(255,255,255,.72);line-height:1.6}
+.consent-card{background:#fff;border:1px solid var(--border);border-radius:16px;padding:1.5rem;margin-bottom:1rem;box-shadow:0 2px 12px rgba(26,107,107,.06)}
+.consent-title{font-family:'DM Serif Display',serif;font-size:1rem;color:var(--teal);margin-bottom:.5rem}
+.disclaimer{background:#FFF8F0;border:1.5px solid #F0C080;border-radius:12px;padding:1rem;margin-bottom:1rem}
+.disclaimer-title{font-size:12px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+.disc-body{font-size:12px;color:var(--mid);line-height:1.65}
+.disc-body p{margin-bottom:6px}
+.disc-body p:last-child{margin-bottom:0}
+.privacy-box{background:var(--teal-light);border:1.5px solid var(--teal2);border-radius:12px;padding:1rem;margin-bottom:1rem}
+.privacy-title{font-size:12px;font-weight:700;color:var(--teal);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+.priv-body{font-size:12px;color:var(--mid);line-height:1.65}
+.priv-body p{margin-bottom:6px}
+.priv-body p:last-child{margin-bottom:0}
+.consent-checks{display:flex;flex-direction:column;gap:10px;margin-bottom:1.25rem}
+.check-row{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;background:var(--teal-pale);border:1px solid var(--border);border-radius:10px;cursor:pointer;transition:background .2s}
+.check-row:hover{background:#fff}
+.check-row input[type=checkbox]{width:18px;height:18px;flex-shrink:0;margin-top:1px;cursor:pointer;accent-color:var(--teal)}
+.check-label{font-size:13px;color:var(--mid);line-height:1.5;cursor:pointer}
+.check-label strong{color:var(--dark);font-weight:600}
+
+/* ── SETUP ── */
+#setupScreen{display:none;max-width:480px;margin:0 auto;padding:2rem 1rem 3rem}
+.setup-hero{background:linear-gradient(135deg,#1A6B6B,#0D4040);border-radius:20px;padding:1.75rem;margin-bottom:1.5rem;position:relative;overflow:hidden}
+.setup-hero::after{content:'🛡️';position:absolute;right:-10px;bottom:-18px;font-size:6rem;opacity:.08;pointer-events:none}
+.setup-hero h1{font-family:'DM Serif Display',serif;font-size:1.5rem;color:#fff;line-height:1.25;margin-bottom:6px}
+.setup-hero h1 em{font-style:italic;color:#A8D8D8}
+.setup-hero p{font-size:13px;color:rgba(255,255,255,.72);line-height:1.6}
+.card{background:#fff;border:1px solid var(--border);border-radius:16px;padding:1.5rem;margin-bottom:1rem;box-shadow:0 2px 12px rgba(26,107,107,.06)}
+.card-title{font-family:'DM Serif Display',serif;font-size:1.05rem;color:var(--teal);margin-bottom:.25rem}
+.card-sub{font-size:12px;color:var(--soft);margin-bottom:1.1rem;line-height:1.5}
+label{display:block;font-size:12px;font-weight:600;color:var(--dark);margin-bottom:5px}
+label .opt{font-weight:400;color:var(--soft);font-size:11px}
+.field{margin-bottom:1rem}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+input[type=text],input[type=date]{width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:15px;color:var(--dark);background:var(--teal-pale);outline:none;transition:border-color .2s,box-shadow .2s,background .2s;-webkit-appearance:none}
+input:focus{border-color:var(--teal2);box-shadow:0 0 0 3px rgba(42,144,144,.12);background:#fff}
+.gender-toggle{display:flex;gap:8px}
+.gender-btn{flex:1;padding:11px;border-radius:10px;border:1.5px solid var(--border);background:var(--teal-pale);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;text-align:center;transition:all .2s;color:var(--soft)}
+.gender-btn:hover{border-color:var(--teal);color:var(--teal);background:#fff}
+.gender-btn.girl.selected{border-color:var(--pink);background:var(--pink-bg);color:var(--pink)}
+.gender-btn.boy.selected{border-color:var(--blue);background:var(--blue-bg);color:var(--blue)}
+.notebox{background:var(--teal-light);border-left:3px solid var(--teal2);border-radius:0 10px 10px 0;padding:10px 14px;font-size:12px;color:var(--mid);line-height:1.55;margin-bottom:1rem}
+
+/* ── SAVE TO PHONE PROMPT in setup ── */
+.save-prompt{background:var(--gold-light);border:1.5px solid var(--soon-border);border-radius:12px;padding:1rem;margin-bottom:1rem;display:flex;gap:10px;align-items:center}
+.save-prompt-text{flex:1;font-size:13px;color:var(--mid);line-height:1.5}
+.save-prompt-text strong{color:var(--dark)}
+.save-prompt-btn{background:var(--gold);color:#fff;border:none;border-radius:8px;padding:8px 14px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0}
+
+.btn{width:100%;padding:14px;border:none;border-radius:12px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;cursor:pointer;transition:all .2s}
+.btn-teal{background:var(--teal);color:#fff;box-shadow:0 4px 16px rgba(26,107,107,.28)}
+.btn-teal:hover{background:#155858}
+.btn-teal:disabled{background:var(--soft);box-shadow:none;cursor:not-allowed}
+.btn-outline{background:transparent;color:var(--teal);border:2px solid var(--teal)}
+.btn-outline:hover{background:var(--teal-pale)}
+
+/* ── TRACKER ── */
+#tracker{display:none}
+.t-header{padding:1rem;position:sticky;top:0;z-index:100}
+.t-header.girl{background:linear-gradient(135deg,#C2185B,#880E4F)}
+.t-header.boy{background:linear-gradient(135deg,#1565C0,#0D3C7A)}
+.t-header.neutral{background:linear-gradient(135deg,#1A6B6B,#0D4040)}
+.t-header-inner{max-width:560px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.t-name{font-family:'DM Serif Display',serif;font-size:1.05rem;color:#fff}
+.t-dob{font-size:11px;color:rgba(255,255,255,.6);margin-top:1px}
+.t-prog{text-align:right}
+.t-prog-num{font-size:11px;color:rgba(255,255,255,.7)}
+.t-prog-bar{width:80px;height:4px;background:rgba(255,255,255,.2);border-radius:2px;overflow:hidden;margin-top:4px;margin-left:auto}
+.t-prog-fill{height:100%;background:#A8D8D8;border-radius:2px;transition:width .5s ease}
+.legend{background:#fff;border-bottom:1px solid var(--border);padding:.6rem 1rem}
+.legend-inner{max-width:560px;margin:0 auto;display:flex;gap:14px;flex-wrap:wrap}
+.leg{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--mid);font-weight:500}
+.leg-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.t-body{max-width:560px;margin:0 auto;padding:1rem}
+.age-group{margin-bottom:1.25rem}
+.age-header{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.age-pill{color:#fff;font-size:11px;font-weight:700;padding:3px 11px;border-radius:20px}
+.age-pill.girl{background:var(--pink)}
+.age-pill.boy{background:var(--blue)}
+.age-pill.neutral{background:var(--teal)}
+.vcard{display:flex;align-items:center;gap:12px;border:1.5px solid var(--future-border);border-radius:14px;padding:12px 14px;margin-bottom:7px;background:var(--future-bg);transition:all .3s ease}
+.vcard.given{border-color:var(--given-border);background:var(--given-bg)}
+.vcard.missed{border-color:var(--missed-border);background:var(--missed-bg);animation:pulse 2.5s ease infinite}
+.vcard.soon{border-color:var(--soon-border);background:var(--soon-bg)}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(192,57,43,.1)}50%{box-shadow:0 0 0 5px rgba(192,57,43,.06)}}
+.give-btn{width:44px;height:44px;border-radius:50%;border:2px solid var(--border);background:#fff;display:flex;align-items:center;justify-content:center;font-size:1.1rem;cursor:pointer;flex-shrink:0;transition:all .25s;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.give-btn:hover{border-color:var(--given);background:var(--given-bg);transform:scale(1.06)}
+.give-btn:active{transform:scale(.94)}
+.vcard.given .give-btn{background:var(--given);border-color:var(--given);box-shadow:0 3px 12px rgba(30,122,80,.3)}
+.vinfo{flex:1;min-width:0}
+.vname{font-size:13px;font-weight:600;color:var(--dark);margin-bottom:2px;transition:color .3s}
+.vcard.given .vname{color:var(--given)}
+.vcard.missed .vname{color:var(--missed)}
+.vprotects{font-size:11px;color:var(--soft);line-height:1.35;margin-bottom:3px}
+.vstatus{font-size:11px;font-weight:700;display:inline-flex;align-items:center;gap:3px;padding:2px 8px;border-radius:10px}
+.vstatus.given{background:var(--given-bg);color:var(--given)}
+.vstatus.missed{background:var(--missed-bg);color:var(--missed)}
+.vstatus.soon{background:var(--soon-bg);color:var(--soon)}
+.vstatus.future{background:#eee;color:var(--soft)}
+.hosp-wrap{max-height:0;overflow:hidden;transition:max-height .3s ease,margin .3s ease}
+.hosp-wrap.open{max-height:60px;margin-top:8px}
+.hosp-input{width:100%;padding:8px 11px;border:1.5px solid var(--given-border);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:12px;color:var(--dark);background:#fff;outline:none}
+.hosp-input:focus{border-color:var(--given);box-shadow:0 0 0 3px rgba(30,122,80,.1)}
+.hpv-note{background:var(--pink-bg);border:1px solid var(--pink-border);border-radius:10px;padding:8px 12px;margin-top:6px;font-size:11px;color:var(--pink);font-weight:500}
+
+/* ── CALENDAR SECTION ── */
+.cal-section{max-width:560px;margin:0 auto;padding:0 1rem 1rem}
+.cal-card{background:#fff;border:1px solid var(--border);border-radius:16px;padding:1.25rem;margin-bottom:1rem;box-shadow:0 2px 8px rgba(26,107,107,.05)}
+.cal-title{font-family:'DM Serif Display',serif;font-size:1rem;color:var(--teal);margin-bottom:.25rem}
+.cal-sub{font-size:12px;color:var(--soft);margin-bottom:1rem;line-height:1.5}
+.gcal-list{display:flex;flex-direction:column;gap:7px;margin-bottom:1rem}
+.gcal-row{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--teal-pale);border:1px solid var(--border);border-radius:10px}
+.gcal-info{flex:1}
+.gcal-age{font-size:10px;font-weight:700;color:var(--teal);text-transform:uppercase;letter-spacing:.06em}
+.gcal-date{font-size:13px;font-weight:600;color:var(--dark)}
+.gcal-btn{background:var(--teal);color:#fff;border:none;border-radius:8px;padding:7px 12px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;transition:background .2s;text-decoration:none;display:inline-block}
+.gcal-btn:hover{background:#155858}
+.gcal-btn.added{background:var(--given)}
+
+/* ── SOUND REMINDER BANNER ── */
+.sound-banner{background:linear-gradient(135deg,#B85C00,#8A4400);border-radius:14px;padding:1rem;margin-bottom:1rem;display:flex;gap:10px;align-items:center}
+.sound-banner-text{flex:1;font-size:13px;color:#fff;line-height:1.5}
+.sound-banner-text strong{font-weight:700}
+.sound-banner-btn{background:#fff;color:var(--gold);border:none;border-radius:8px;padding:8px 13px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0}
+
+.summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;max-width:560px;margin:0 auto;padding:1rem}
+.sum{text-align:center;padding:10px 6px;border-radius:12px}
+.sum.given{background:var(--given-bg)}
+.sum.missed{background:var(--missed-bg)}
+.sum.upcoming{background:var(--teal-light)}
+.sum-n{font-size:22px;font-weight:700}
+.sum.given .sum-n{color:var(--given)}
+.sum.missed .sum-n{color:var(--missed)}
+.sum.upcoming .sum-n{color:var(--teal)}
+.sum-l{font-size:11px;font-weight:600;color:var(--soft);margin-top:2px}
+.tracker-disclaimer{background:#f9f9f7;border:1px solid var(--border);border-radius:12px;padding:.75rem 1rem;margin:0 1rem 1rem;font-size:11px;color:var(--soft);line-height:1.6;text-align:center}
+.t-footer{text-align:center;font-size:11px;color:var(--soft);padding:.5rem 1rem 1rem;line-height:1.7}
+@media(max-width:440px){.field-row{grid-template-columns:1fr}.legend-inner{gap:8px}}
+</style>
+</head>
+<body>
+
+<!-- ══ INSTALL BANNER ══ -->
+<div id="installBanner">
+  <div class="install-inner">
+    <div class="install-icon">📱</div>
+    <div class="install-text"><strong>Add MamaShield to your home screen</strong> for quick access anytime — no app store needed</div>
+    <button class="install-btn" onclick="showSaveModal()">How to save</button>
+    <button class="install-close" onclick="document.getElementById('installBanner').style.display='none'">✕</button>
+  </div>
+</div>
+
+<!-- ══ SAVE TO HOME SCREEN MODAL ══ -->
+<div id="saveModal" onclick="if(event.target===this)closeSaveModal()">
+  <div class="save-sheet">
+    <h2>📱 Save MamaShield to your phone</h2>
+    <p class="sub">Save this tracker to your home screen so you can open it with one tap — just like an app. Free. No app store needed.</p>
+    <div class="os-tab">
+      <button class="os-btn active" id="osAndroid" onclick="switchOS('android')">🤖 Android</button>
+      <button class="os-btn" id="osIphone" onclick="switchOS('iphone')">🍎 iPhone</button>
+    </div>
+    <div class="os-steps show" id="stepsAndroid">
+      <div class="os-step"><div class="os-num">1</div><div class="os-text">Open this page in <strong>Google Chrome</strong> on your Android phone</div></div>
+      <div class="os-step"><div class="os-num">2</div><div class="os-text">Tap the <strong>three dots menu (⋮)</strong> at the top right of Chrome</div></div>
+      <div class="os-step"><div class="os-num">3</div><div class="os-text">Tap <strong>"Add to Home screen"</strong> from the menu</div></div>
+      <div class="os-step"><div class="os-num">4</div><div class="os-text">Tap <strong>"Add"</strong> on the popup that appears</div></div>
+      <div class="os-step"><div class="os-num">5</div><div class="os-text">✅ Done! Look for the <strong>MamaShield 🛡️ icon</strong> on your home screen. Tap it anytime to open your tracker instantly.</div></div>
+    </div>
+    <div class="os-steps" id="stepsIphone">
+      <div class="os-step"><div class="os-num">1</div><div class="os-text">Open this page in <strong>Safari</strong> on your iPhone (must be Safari, not Chrome)</div></div>
+      <div class="os-step"><div class="os-num">2</div><div class="os-text">Tap the <strong>Share button</strong> at the bottom of the screen — it looks like a box with an arrow pointing up ⬆️</div></div>
+      <div class="os-step"><div class="os-num">3</div><div class="os-text">Scroll down the share menu and tap <strong>"Add to Home Screen"</strong></div></div>
+      <div class="os-step"><div class="os-num">4</div><div class="os-text">Tap <strong>"Add"</strong> at the top right</div></div>
+      <div class="os-step"><div class="os-num">5</div><div class="os-text">✅ Done! The <strong>MamaShield 🛡️ icon</strong> now appears on your home screen. Tap it anytime.</div></div>
+    </div>
+    <button class="close-sheet" onclick="closeSaveModal()">Got it — close this</button>
+  </div>
+</div>
+
+<!-- ══ SOUND REMINDER MODAL ══ -->
+<div id="soundModal" onclick="if(event.target===this)closeSoundModal()">
+  <div class="sound-sheet">
+    <h2>🔔 Set your vaccine reminder with SOUND</h2>
+    <p class="sub">A silent notification is easy to miss. Follow these steps to make sure your phone makes a sound — even on silent mode.</p>
+    <div class="warning-box">⚠️ <strong>Important:</strong> There is a difference between a Google Calendar <em>notification</em> (silent banner) and an <em>alarm</em> (makes sound). You need the ALARM setting so your phone rings even if it is on silent or Do Not Disturb.</div>
+    <div class="sound-os-tab">
+      <button class="sound-os-btn active" id="soundAndroid" onclick="switchSoundOS('android')">🤖 Android</button>
+      <button class="sound-os-btn" id="soundIphone" onclick="switchSoundOS('iphone')">🍎 iPhone</button>
+    </div>
+    <div class="sound-steps show" id="soundStepsAndroid">
+      <div class="sound-step"><div class="sound-num">1</div><div class="sound-text">After tapping <strong>"+ Add to Calendar"</strong>, Google Calendar opens with the event already filled in</div></div>
+      <div class="sound-step"><div class="sound-num">2</div><div class="sound-text">Scroll down on the event page to find <strong>"Add notification"</strong></div></div>
+      <div class="sound-step"><div class="sound-num">3</div><div class="sound-text">Tap the dropdown that says <strong>"Notification"</strong> and change it to <strong>"Alarm"</strong> — this makes a sound</div></div>
+      <div class="sound-step"><div class="sound-num">4</div><div class="sound-text">Set the time — choose <strong>"1 week before"</strong> for your first reminder. Tap <strong>"Add notification"</strong> again and add <strong>"1 day before"</strong> as a second reminder.</div></div>
+      <div class="sound-step"><div class="sound-num">5</div><div class="sound-text">Tap <strong>Save</strong> ✅ — your phone will now ring with an alarm before every vaccine appointment</div></div>
+      <div class="sound-step"><div class="sound-num">6</div><div class="sound-text">Also go to your phone <strong>Settings → Apps → Google Calendar → Notifications</strong> and make sure notifications are turned ON and set to <strong>"High importance"</strong></div></div>
+    </div>
+    <div class="sound-steps" id="soundStepsIphone">
+      <div class="sound-step"><div class="sound-num">1</div><div class="sound-text">After tapping <strong>"+ Add to Calendar"</strong>, Google Calendar opens with the event filled in</div></div>
+      <div class="sound-step"><div class="sound-num">2</div><div class="sound-text">Tap <strong>"Add alert"</strong> on the event page</div></div>
+      <div class="sound-step"><div class="sound-num">3</div><div class="sound-text">Select <strong>"1 week before"</strong> — then tap <strong>"Add another alert"</strong> and select <strong>"1 day before"</strong></div></div>
+      <div class="sound-step"><div class="sound-num">4</div><div class="sound-text">Tap <strong>Save</strong> — the alerts will appear as iPhone notifications with sound</div></div>
+      <div class="sound-step"><div class="sound-num">5</div><div class="sound-text">To ensure sound: go to <strong>iPhone Settings → Notifications → Google Calendar</strong> → turn on <strong>Allow Notifications</strong> and set <strong>Sounds to ON</strong></div></div>
+      <div class="sound-step"><div class="sound-num">6</div><div class="sound-text">⚠️ iPhone tip: Calendar alerts on iPhone play sound even on silent mode — but only if you go to <strong>Settings → Sounds → Calendar Alerts</strong> and select a ringtone</div></div>
+    </div>
+    <button class="close-sound" onclick="closeSoundModal()">Got it — close this</button>
+  </div>
+</div>
+
+<!-- ══ CONSENT SCREEN ══ -->
+<div id="consentScreen">
+  <div class="consent-hero">
+    <p class="brand">MamaShield · Blessing's Vestule</p>
+    <h1>Before you start — please read this</h1>
+    <p>MamaShield is a free scheduling and reminder tool. Please take 60 seconds to read what it is and what it is not.</p>
+  </div>
+  <div class="disclaimer">
+    <div class="disclaimer-title">⚕️ Medical Disclaimer</div>
+    <div class="disc-body">
+      <p><strong>MamaShield is not a medical service.</strong> It is a personal scheduling and reminder tool to help you track your baby's Nigerian NPI immunization appointments.</p>
+      <p>MamaShield does <strong>not</strong> provide medical advice, diagnoses, or treatment recommendations. All vaccine schedule information is sourced directly from Nigeria's <strong>National Programme on Immunization (NPI) 2025–2026 schedule</strong>, published by the NPHCDA.</p>
+      <p>MamaShield is <strong>not affiliated with</strong> the Nigerian Medical Association (NMA), the Medical and Dental Council of Nigeria (MDCN), or the NPHCDA.</p>
+      <p><strong>Always consult a qualified healthcare professional</strong> for all medical decisions regarding your baby's health. If your baby is unwell, seek immediate medical attention.</p>
+    </div>
+  </div>
+  <div class="privacy-box">
+    <div class="privacy-title">🔒 Your Data Privacy — Nigeria Data Protection Act 2023</div>
+    <div class="priv-body">
+      <p>In compliance with the <strong>Nigeria Data Protection Act (NDPA) 2023</strong>:</p>
+      <p><strong>What we collect:</strong> Baby's name, date of birth, sex, and optionally blood group, mother's name, and clinic name.</p>
+      <p><strong>Where your data is stored:</strong> <strong>Nowhere.</strong> Everything stays only on your device during this session. MamaShield does not transmit, store, or share your data on any server. When you close this page, your data is gone.</p>
+      <p><strong>Your rights:</strong> You may withdraw consent at any time by closing this page.</p>
+      <p><strong>Data Controller:</strong> Blessing's Vestule · blessingsvestule@gmail.com</p>
+    </div>
+  </div>
+  <div class="consent-card">
+    <p class="consent-title">Your consent — please tick all boxes to continue</p>
+    <div class="consent-checks">
+      <label class="check-row"><input type="checkbox" id="c1" onchange="checkConsent()"/><span class="check-label">I understand that <strong>MamaShield is not a medical service</strong> and does not replace a qualified healthcare professional.</span></label>
+      <label class="check-row"><input type="checkbox" id="c2" onchange="checkConsent()"/><span class="check-label">I understand the vaccine schedule is based on the <strong>Nigerian NPI 2025–2026 schedule</strong> and I will confirm dates with my doctor or health centre.</span></label>
+      <label class="check-row"><input type="checkbox" id="c3" onchange="checkConsent()"/><span class="check-label">I <strong>freely consent</strong> to entering my baby's details and understand data is stored only on my device and not shared with any third party.</span></label>
+      <label class="check-row"><input type="checkbox" id="c4" onchange="checkConsent()"/><span class="check-label">I understand I can <strong>withdraw consent at any time</strong> by closing this page and no data is retained.</span></label>
+    </div>
+    <button class="btn btn-teal" id="proceedBtn" onclick="proceedToSetup()" disabled>I Agree — Open My Baby's Tracker →</button>
+  </div>
+</div>
+
+<!-- ══ SETUP SCREEN ══ -->
+<div id="setupScreen">
+  <div class="setup-hero">
+    <p class="brand">MamaShield · Blessing's Vestule</p>
+    <h1>One tap.<br/><em>Everything else is automatic.</em></h1>
+    <p>Enter your baby's details once. Every vaccine date, colour, and status updates itself — you only tap when a vaccine has been given.</p>
+  </div>
+  <div class="save-prompt">
+    <div style="font-size:1.4rem;flex-shrink:0">📱</div>
+    <div class="save-prompt-text"><strong>Save this to your phone home screen first</strong> so you can open it with one tap anytime — like an app.</div>
+    <button class="save-prompt-btn" onclick="showSaveModal()">How to save</button>
+  </div>
+  <div class="card">
+    <p class="card-title">Your baby's details</p>
+    <p class="card-sub">Fill these in once — every vaccine date populates automatically from the date of birth.</p>
+    <div class="field"><label>Baby's name</label><input type="text" id="sName" placeholder="e.g. Adaeze, Emeka, Fatima…" maxlength="30"/></div>
+    <div class="field-row">
+      <div class="field"><label>Date of birth</label><input type="date" id="sDob" max=""/></div>
+      <div class="field"><label>Blood group <span class="opt">(optional)</span></label><input type="text" id="sBlood" placeholder="e.g. O+" maxlength="5"/></div>
+    </div>
+    <div class="field"><label>Sex of baby</label>
+      <div class="gender-toggle">
+        <button class="gender-btn girl" id="btnGirl" onclick="selectGender('girl')">👧 Girl</button>
+        <button class="gender-btn boy" id="btnBoy" onclick="selectGender('boy')">👦 Boy</button>
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field"><label>Mother's name <span class="opt">(optional)</span></label><input type="text" id="sMum" placeholder="Your name" maxlength="30"/></div>
+      <div class="field"><label>Default clinic <span class="opt">(optional)</span></label><input type="text" id="sClinic" placeholder="Clinic name" maxlength="40"/></div>
+    </div>
+    <div class="notebox">💡 All NPI vaccines are <strong>FREE</strong> at government health centres across Nigeria. Girls also receive the HPV vaccine at age 9 — included in this tracker.</div>
+    <button class="btn btn-teal" onclick="launch()">Open My Baby's Tracker →</button>
+  </div>
+</div>
+
+<!-- ══ TRACKER SCREEN ══ -->
+<div id="tracker">
+  <div class="t-header neutral" id="tHeader">
+    <div class="t-header-inner">
+      <div><div class="t-name" id="tName"></div><div class="t-dob" id="tDob"></div></div>
+      <div class="t-prog"><div class="t-prog-num" id="tProgNum">0 given</div><div class="t-prog-bar"><div class="t-prog-fill" id="tProgFill" style="width:0%"></div></div></div>
+    </div>
+  </div>
+  <div class="legend"><div class="legend-inner">
+    <div class="leg"><div class="leg-dot" style="background:var(--given)"></div>Given</div>
+    <div class="leg"><div class="leg-dot" style="background:var(--missed)"></div>Missed — auto</div>
+    <div class="leg"><div class="leg-dot" style="background:var(--soon)"></div>Due soon</div>
+    <div class="leg"><div class="leg-dot" style="background:var(--border)"></div>Upcoming</div>
+  </div></div>
+  <div class="t-body" id="tBody"></div>
+  <div class="summary">
+    <div class="sum given"><div class="sum-n" id="sGiven">0</div><div class="sum-l">Given ✓</div></div>
+    <div class="sum missed"><div class="sum-n" id="sMissed">0</div><div class="sum-l">Missed ⚠️</div></div>
+    <div class="sum upcoming"><div class="sum-n" id="sPending">0</div><div class="sum-l">Upcoming</div></div>
+  </div>
+
+  <!-- CALENDAR + SOUND SECTION -->
+  <div class="cal-section">
+    <div class="sound-banner">
+      <div style="font-size:1.5rem;flex-shrink:0">🔔</div>
+      <div class="sound-banner-text"><strong>Important — set sound reminders!</strong> Adding to Google Calendar alone is not enough. Tap here to learn how to make your phone ring with sound before every vaccine appointment.</div>
+      <button class="sound-banner-btn" onclick="showSoundModal()">How to set sound</button>
+    </div>
+    <div class="cal-card">
+      <p class="cal-title">Add vaccine appointments to Google Calendar</p>
+      <p class="cal-sub">Tap any button below to open Google Calendar pre-filled with that appointment. Then follow the sound reminder guide above to make sure your phone alerts you with sound.</p>
+      <div class="gcal-list" id="gcalList"></div>
+    </div>
+  </div>
+
+  <div class="tracker-disclaimer">⚕️ MamaShield is a scheduling tool only — not a medical service. Always confirm vaccine dates with your paediatrician or nearest government health centre. Based on Nigerian NPI 2025–2026 schedule (NPHCDA).</div>
+  <div class="t-footer" id="tFooter"></div>
+  <div style="padding:0 1rem 2rem;max-width:560px;margin:0 auto"><button class="btn btn-outline" onclick="reset()">← New baby / start over</button></div>
+</div>
+
+<script>
+const VAX_BASE=[
+  {age:"At Birth",days:0,name:"BCG",protects:"Tuberculosis (TB)"},
+  {age:"At Birth",days:0,name:"OPV0 — Oral Polio",protects:"Polio"},
+  {age:"At Birth",days:0,name:"Hepatitis B0",protects:"Hepatitis B"},
+  {age:"6 Weeks",days:42,name:"Pentavalent 1",protects:"Diphtheria, Whooping Cough, Tetanus, Hep B, Meningitis"},
+  {age:"6 Weeks",days:42,name:"PCV1",protects:"Pneumonia & Meningitis"},
+  {age:"6 Weeks",days:42,name:"OPV1 — Oral Polio",protects:"Polio"},
+  {age:"6 Weeks",days:42,name:"IPV1 — Injected Polio",protects:"Polio (stronger dose)"},
+  {age:"6 Weeks",days:42,name:"Rotavirus 1",protects:"Severe diarrhoea"},
+  {age:"10 Weeks",days:70,name:"Pentavalent 2",protects:"Diphtheria, Whooping Cough, Tetanus, Hep B, Meningitis"},
+  {age:"10 Weeks",days:70,name:"PCV2",protects:"Pneumonia & Meningitis"},
+  {age:"10 Weeks",days:70,name:"OPV2 — Oral Polio",protects:"Polio"},
+  {age:"10 Weeks",days:70,name:"Rotavirus 2",protects:"Severe diarrhoea"},
+  {age:"14 Weeks",days:98,name:"Pentavalent 3",protects:"Diphtheria, Whooping Cough, Tetanus, Hep B, Meningitis"},
+  {age:"14 Weeks",days:98,name:"PCV3",protects:"Pneumonia & Meningitis"},
+  {age:"14 Weeks",days:98,name:"OPV3 — Oral Polio",protects:"Polio"},
+  {age:"14 Weeks",days:98,name:"IPV2 — Injected Polio",protects:"Polio (booster)"},
+  {age:"14 Weeks",days:98,name:"Rotavirus 3",protects:"Severe diarrhoea"},
+  {age:"6 Months",days:183,name:"Vitamin A — 1st dose",protects:"Vision & immune strength (oral drop)"},
+  {age:"9 Months",days:274,name:"Measles MCV1",protects:"Measles"},
+  {age:"9 Months",days:274,name:"Yellow Fever",protects:"Yellow fever"},
+  {age:"9 Months",days:274,name:"Meningitis MenA",protects:"Bacterial meningitis"},
+  {age:"12 Months",days:365,name:"Vitamin A — 2nd dose",protects:"Vision & immune strength (oral drop)"},
+  {age:"15 Months",days:456,name:"Measles Booster MCV2",protects:"Measles — critical booster, do not skip"},
+];
+const VAX_GIRL=[
+  {age:"9 Years (Girls)",days:3287,name:"HPV Vaccine — Dose 1",protects:"Cervical cancer prevention — girls only",hpv:true},
+  {age:"9 Years (Girls)",days:3377,name:"HPV Vaccine — Dose 2",protects:"Cervical cancer prevention (6 months after dose 1)",hpv:true},
+];
+let VAX=[],given=[],hospitals=[],DOB=null,gender='';
+const MO=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const addD=(d,n)=>{const r=new Date(d);r.setDate(r.getDate()+n);return r;};
+const fmt=d=>`${d.getDate()} ${MO[d.getMonth()]} ${d.getFullYear()}`;
+const fmtGCal=d=>`${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}`;
+const today=()=>{const t=new Date();t.setHours(0,0,0,0);return t;};
+const dL=due=>Math.round((due-today())/86400000);
+
+// Modals
+function showSaveModal(){document.getElementById('saveModal').classList.add('open')}
+function closeSaveModal(){document.getElementById('saveModal').classList.remove('open')}
+function showSoundModal(){document.getElementById('soundModal').classList.add('open')}
+function closeSoundModal(){document.getElementById('soundModal').classList.remove('open')}
+function switchOS(os){
+  document.getElementById('osAndroid').className='os-btn'+(os==='android'?' active':'');
+  document.getElementById('osIphone').className='os-btn'+(os==='iphone'?' active':'');
+  document.getElementById('stepsAndroid').className='os-steps'+(os==='android'?' show':'');
+  document.getElementById('stepsIphone').className='os-steps'+(os==='iphone'?' show':'');
+}
+function switchSoundOS(os){
+  document.getElementById('soundAndroid').className='sound-os-btn'+(os==='android'?' active':'');
+  document.getElementById('soundIphone').className='sound-os-btn'+(os==='iphone'?' active':'');
+  document.getElementById('soundStepsAndroid').className='sound-steps'+(os==='android'?' show':'');
+  document.getElementById('soundStepsIphone').className='sound-steps'+(os==='iphone'?' show':'');
+}
+
+// PWA install prompt
+let deferredPrompt=null;
+window.addEventListener('beforeinstallprompt',e=>{
+  e.preventDefault();deferredPrompt=e;
+  document.getElementById('installBanner').classList.add('show');
+});
+document.querySelector('.install-btn').addEventListener('click',()=>{
+  if(deferredPrompt){deferredPrompt.prompt();deferredPrompt.userChoice.then(()=>{deferredPrompt=null;document.getElementById('installBanner').style.display='none';});}
+  else showSaveModal();
+});
+
+function checkConsent(){const all=['c1','c2','c3','c4'].every(id=>document.getElementById(id).checked);document.getElementById('proceedBtn').disabled=!all;}
+function proceedToSetup(){document.getElementById('consentScreen').style.display='none';document.getElementById('setupScreen').style.display='block';window.scrollTo({top:0,behavior:'smooth'});}
+function selectGender(g){gender=g;document.getElementById('btnGirl').className='gender-btn girl'+(g==='girl'?' selected':'');document.getElementById('btnBoy').className='gender-btn boy'+(g==='boy'?' selected':'');}
+function getState(i){if(given[i])return'given';const dl=dL(addD(DOB,VAX[i].days));if(dl<0)return'missed';if(dl<=14)return'soon';return'future';}
+function chip(state,dueDate){const dl=dL(dueDate);if(state==='given')return`<span class="vstatus given">✓ Given</span>`;if(state==='missed')return`<span class="vstatus missed">⚠️ Overdue — was due ${fmt(dueDate)}</span>`;if(state==='soon')return dl===0?`<span class="vstatus soon">📅 Due TODAY</span>`:`<span class="vstatus soon">📅 Due in ${dl} day${dl>1?'s':''} — ${fmt(dueDate)}</span>`;return`<span class="vstatus future">Due ${fmt(dueDate)}</span>`;}
+
+function makeGCalURL(babyName,age,dueDate,vaccines,note){
+  const start=fmtGCal(dueDate),end=fmtGCal(addD(dueDate,1));
+  const details=`Vaccines: ${vaccines}\n\nNote: ${note}\n\n⚠️ IMPORTANT — Set this as an ALARM (not just notification) so your phone makes a sound.\n\nBring:\n• Baby's vaccination card\n• Change of clothes\n\nAll NPI vaccines are FREE at government health centres in Nigeria.\n\nMamaShield · Blessing's Vestule`;
+  const p=new URLSearchParams({action:'TEMPLATE',text:`💉 ${babyName} — ${age} Vaccines`,dates:`${start}/${end}`,details,location:'Your nearest government health centre / PHC'});
+  return`https://calendar.google.com/calendar/render?${p.toString()}`;
+}
+
+function buildGCalList(babyName){
+  const groups={};
+  VAX.forEach((v,i)=>{if(!groups[v.age])groups[v.age]=[];groups[v.age].push(i);});
+  const list=document.getElementById('gcalList');list.innerHTML='';
+  Object.entries(groups).forEach(([age,idxs])=>{
+    const dueDate=addD(DOB,VAX[idxs[0]].days);
+    const allGiven=idxs.every(i=>given[i]);
+    if(allGiven)return;
+    const vaccines=idxs.map(i=>VAX[i].name).join(', ');
+    const note=`Allow 1–2 hours. Confirm clinic is open before visiting. Baby may have mild fever after some vaccines — paracetamol drops are safe.`;
+    const url=makeGCalURL(babyName,age,dueDate,vaccines,note);
+    const row=document.createElement('div');row.className='gcal-row';row.id=`gcal-${age.replace(/[\s()]/g,'-')}`;
+    row.innerHTML=`<div class="gcal-info"><div class="gcal-age">${age}</div><div class="gcal-date">${fmt(dueDate)}</div></div><a class="gcal-btn" href="${url}" target="_blank" onclick="markGCalAdded(this)">+ Add to Calendar</a>`;
+    list.appendChild(row);
+  });
+}
+
+function markGCalAdded(btn){setTimeout(()=>{btn.textContent='✅ Added';btn.classList.add('added');},400);}
+
+function launch(){
+  const name=document.getElementById('sName').value.trim();
+  const dobV=document.getElementById('sDob').value;
+  if(!name){alert("Please enter your baby's name.");return;}
+  if(!dobV){alert("Please enter your baby's date of birth.");return;}
+  if(!gender){alert("Please select the sex of your baby.");return;}
+  DOB=new Date(dobV+'T00:00:00');
+  VAX=[...VAX_BASE,...(gender==='girl'?VAX_GIRL:[])];
+  given=new Array(VAX.length).fill(false);hospitals=new Array(VAX.length).fill('');
+  const icon=gender==='girl'?'👧':'👦';
+  const blood=document.getElementById('sBlood').value.trim();
+  const mum=document.getElementById('sMum').value.trim();
+  document.getElementById('tName').innerHTML=`${icon} ${name}'s Vaccine Tracker`;
+  document.getElementById('tDob').textContent=`Born ${fmt(DOB)}${blood?' · '+blood:''}`;
+  document.getElementById('tHeader').className=`t-header ${gender}`;
+  document.getElementById('tFooter').innerHTML=`MamaShield · Blessing's Vestule 🛡️<br/>Nigerian NPI Schedule 2025–2026${mum?'<br/>Mum: '+mum:''}`;
+  buildCards();buildGCalList(name);
+  document.getElementById('setupScreen').style.display='none';
+  document.getElementById('tracker').style.display='block';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function buildCards(){
+  const body=document.getElementById('tBody');body.innerHTML='';
+  const groups={};VAX.forEach((v,i)=>{if(!groups[v.age])groups[v.age]=[];groups[v.age].push(i);});
+  Object.entries(groups).forEach(([age,idxs])=>{
+    const dueDate=addD(DOB,VAX[idxs[0]].days);
+    const allGiven=idxs.every(i=>given[i]),anyMissed=idxs.some(i=>getState(i)==='missed'),anySoon=idxs.some(i=>getState(i)==='soon');
+    let ageStatus='';
+    if(allGiven)ageStatus=`<span style="font-size:11px;font-weight:700;color:var(--given);margin-left:auto">✓ All given</span>`;
+    else if(anyMissed)ageStatus=`<span style="font-size:11px;font-weight:700;color:var(--missed);margin-left:auto">⚠️ Overdue</span>`;
+    else if(anySoon)ageStatus=`<span style="font-size:11px;font-weight:700;color:var(--soon);margin-left:auto">Due soon</span>`;
+    const grp=document.createElement('div');grp.className='age-group';grp.id=`grp-${age.replace(/[\s()]/g,'-')}`;
+    grp.innerHTML=`<div class="age-header"><span class="age-pill ${gender}">${age}</span><span class="age-date">${fmt(dueDate)}</span>${ageStatus}</div>`;
+    if(VAX[idxs[0]].hpv){const n=document.createElement('div');n.className='hpv-note';n.textContent='👧 Girls only. Protects against cervical cancer. Free at government health centres. Confirm with your doctor.';grp.appendChild(n);}
+    idxs.forEach(i=>{
+      const v=VAX[i],state=getState(i),dd=addD(DOB,v.days);
+      const card=document.createElement('div');card.className=`vcard ${state}`;card.id=`vc${i}`;
+      card.innerHTML=`<button class="give-btn" id="btn${i}" onclick="tapGiven(${i})" title="Tap when given">${given[i]?'✓':'💉'}</button><div class="vinfo"><div class="vname">${v.name}</div><div class="vprotects">${v.protects}</div><div id="chip${i}">${chip(state,dd)}</div><div class="hosp-wrap ${given[i]?'open':''}" id="hw${i}"><input class="hosp-input" type="text" placeholder="Which clinic gave this? (optional)" value="${hospitals[i]}" onchange="hospitals[${i}]=this.value" id="hi${i}"/></div></div>`;
+      grp.appendChild(card);
+    });
+    body.appendChild(grp);
+  });updateSummary();
+}
+
+function tapGiven(i){
+  given[i]=!given[i];
+  const state=getState(i),dd=addD(DOB,VAX[i].days);
+  const card=document.getElementById(`vc${i}`);
+  card.className=`vcard ${state}`;
+  document.getElementById(`btn${i}`).textContent=given[i]?'✓':'💉';
+  document.getElementById(`chip${i}`).innerHTML=chip(state,dd);
+  const hw=document.getElementById(`hw${i}`);hw.className=`hosp-wrap ${given[i]?'open':''}`;
+  if(given[i])setTimeout(()=>{const inp=document.getElementById(`hi${i}`);if(inp)inp.focus();},320);
+  const age=VAX[i].age,idxs=VAX.map((v,j)=>v.age===age?j:-1).filter(j=>j>=0);
+  const allGiven=idxs.every(j=>given[j]),anyMissed=idxs.some(j=>getState(j)==='missed'),anySoon=idxs.some(j=>getState(j)==='soon');
+  const grp=document.getElementById(`grp-${age.replace(/[\s()]/g,'-')}`);
+  if(grp){const spans=grp.querySelector('.age-header').querySelectorAll('span');const last=spans[spans.length-1];
+    if(allGiven)last.outerHTML=`<span style="font-size:11px;font-weight:700;color:var(--given);margin-left:auto">✓ All given</span>`;
+    else if(anyMissed)last.outerHTML=`<span style="font-size:11px;font-weight:700;color:var(--missed);margin-left:auto">⚠️ Overdue</span>`;
+    else if(anySoon)last.outerHTML=`<span style="font-size:11px;font-weight:700;color:var(--soon);margin-left:auto">Due soon</span>`;
+    else last.outerHTML=`<span style="font-size:11px;font-weight:700;color:transparent;margin-left:auto">—</span>`;}
+  // refresh gcal list
+  const nameEl=document.getElementById('tName');if(nameEl)buildGCalList(nameEl.textContent.replace(/👧|👦/g,'').replace("'s Vaccine Tracker",'').trim());
+  updateSummary();
+}
+function updateSummary(){
+  const g=given.filter(Boolean).length,m=VAX.filter((_,i)=>getState(i)==='missed').length,p=VAX.filter((_,i)=>!given[i]).length;
+  document.getElementById('sGiven').textContent=g;document.getElementById('sMissed').textContent=m;document.getElementById('sPending').textContent=p;
+  document.getElementById('tProgNum').textContent=`${g} / ${VAX.length} given`;
+  document.getElementById('tProgFill').style.width=`${Math.round(g/VAX.length*100)}%`;
+}
+function reset(){
+  given=[];hospitals=[];VAX=[];gender='';
+  ['sName','sDob','sMum','sClinic','sBlood'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('btnGirl').className='gender-btn girl';document.getElementById('btnBoy').className='gender-btn boy';
+  ['c1','c2','c3','c4'].forEach(id=>document.getElementById(id).checked=false);
+  document.getElementById('proceedBtn').disabled=true;
+  document.getElementById('tracker').style.display='none';document.getElementById('setupScreen').style.display='none';document.getElementById('consentScreen').style.display='block';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+document.getElementById('sDob').max=new Date().toISOString().split('T')[0];
+</script>
+</body>
+</html>
