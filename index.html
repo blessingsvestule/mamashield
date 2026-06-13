@@ -4,15 +4,15 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>MamaShield Baby Vaccine Tracker — Blessing's Vestule</title>
-<meta name="description" content="Free Nigerian baby vaccine tracker for working mums. Track NPI immunization schedule with persistent storage."/>
+<meta name="description" content="Free Nigerian baby vaccine tracker for working mums."/>
 <meta name="theme-color" content="#1A6B6B"/>
-<link rel="manifest" href="./manifest.json"/>
-<link rel="icon" type="image/png" href="./icon.png"/>
-<link rel="apple-touch-icon" href="./icon.png"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <meta name="apple-mobile-web-app-title" content="MamaShield"/>
 <meta name="mobile-web-app-capable" content="yes"/>
+<link rel="manifest" href="./manifest.json"/>
+<link rel="icon" type="image/png" href="./icon.png"/>
+<link rel="apple-touch-icon" href="./icon.png"/>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet"/>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -34,18 +34,17 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--dark);
 #installBanner{background:linear-gradient(135deg,#0D4040,#1A6B6B);padding:.75rem 1rem;display:none;position:sticky;top:0;z-index:200}
 #installBanner.show{display:block}
 .install-inner{max-width:480px;margin:0 auto;display:flex;align-items:center;gap:10px}
-.install-icon{font-size:1.4rem;flex-shrink:0}
 .install-text{flex:1;font-size:12px;color:#fff;line-height:1.45}
 .install-text strong{font-weight:700}
 .install-btn{background:#fff;color:var(--teal);border:none;border-radius:8px;padding:6px 12px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0}
-.install-close{color:rgba(255,255,255,.6);background:none;border:none;font-size:1.2rem;cursor:pointer;flex-shrink:0;padding:0 4px}
+.install-close{color:rgba(255,255,255,.6);background:none;border:none;font-size:1.2rem;cursor:pointer;padding:0 4px}
 
-/* ── SAVE TO PHONE MODAL ── */
+/* ── SAVE MODAL ── */
 #saveModal{display:none;position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.5);align-items:flex-end;justify-content:center}
 #saveModal.open{display:flex}
-.save-sheet{background:#fff;border-radius:20px 20px 0 0;padding:1.5rem;width:100%;max-width:480px;max-height:85vh;overflow-y:auto}
-.save-sheet h2{font-family:'DM Serif Display',serif;font-size:1.2rem;color:var(--teal);margin-bottom:.25rem}
-.save-sheet .sub{font-size:13px;color:var(--soft);margin-bottom:1.25rem;line-height:1.5}
+.sheet{background:#fff;border-radius:20px 20px 0 0;padding:1.5rem;width:100%;max-width:480px;max-height:85vh;overflow-y:auto}
+.sheet h2{font-family:'DM Serif Display',serif;font-size:1.2rem;color:var(--teal);margin-bottom:.25rem}
+.sheet-sub{font-size:13px;color:var(--soft);margin-bottom:1.25rem;line-height:1.5}
 .os-tab{display:flex;gap:8px;margin-bottom:1.25rem}
 .os-btn{flex:1;padding:10px;border-radius:10px;border:1.5px solid var(--border);background:var(--teal-pale);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;text-align:center;transition:all .2s;color:var(--mid)}
 .os-btn.active{border-color:var(--teal);background:var(--teal);color:#fff}
@@ -57,42 +56,17 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--dark);
 .os-text strong{color:var(--dark);font-weight:600}
 .close-sheet{width:100%;padding:12px;background:var(--teal);color:#fff;border:none;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;margin-top:.5rem}
 
-/* ── CONSENT ── */
-#consentScreen{max-width:480px;margin:0 auto;padding:2rem 1rem 3rem}
-.consent-hero{background:linear-gradient(135deg,#1A6B6B,#0D4040);border-radius:20px;padding:1.75rem;margin-bottom:1.5rem;position:relative;overflow:hidden}
-.consent-hero::after{content:'🛡️';position:absolute;right:-10px;bottom:-18px;font-size:6rem;opacity:.08;pointer-events:none}
-.brand{font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:8px}
-.consent-hero h1{font-family:'DM Serif Display',serif;font-size:1.5rem;color:#fff;line-height:1.25;margin-bottom:6px}
-.consent-hero p{font-size:13px;color:rgba(255,255,255,.72);line-height:1.6}
-.consent-card{background:#fff;border:1px solid var(--border);border-radius:16px;padding:1.5rem;margin-bottom:1rem;box-shadow:0 2px 12px rgba(26,107,107,.06)}
-.consent-title{font-family:'DM Serif Display',serif;font-size:1rem;color:var(--teal);margin-bottom:.5rem}
-.disclaimer{background:#FFF8F0;border:1.5px solid #F0C080;border-radius:12px;padding:1rem;margin-bottom:1rem}
-.disclaimer-title{font-size:12px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
-.disc-body{font-size:12px;color:var(--mid);line-height:1.65}
-.disc-body p{margin-bottom:6px}
-.disc-body p:last-child{margin-bottom:0}
-.privacy-box{background:var(--teal-light);border:1.5px solid var(--teal2);border-radius:12px;padding:1rem;margin-bottom:1rem}
-.privacy-title{font-size:12px;font-weight:700;color:var(--teal);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
-.priv-body{font-size:12px;color:var(--mid);line-height:1.65}
-.priv-body p{margin-bottom:6px}
-.priv-body p:last-child{margin-bottom:0}
-.consent-checks{display:flex;flex-direction:column;gap:10px;margin-bottom:1.25rem}
-.check-row{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;background:var(--teal-pale);border:1px solid var(--border);border-radius:10px;cursor:pointer;transition:background .2s}
-.check-row:hover{background:#fff}
-.check-row input[type=checkbox]{width:18px;height:18px;flex-shrink:0;margin-top:1px;cursor:pointer;accent-color:var(--teal)}
-.check-label{font-size:13px;color:var(--mid);line-height:1.5;cursor:pointer}
-.check-label strong{color:var(--dark);font-weight:600}
+/* ── COMMON ── */
+.btn{width:100%;padding:14px;border:none;border-radius:12px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;cursor:pointer;transition:all .2s}
+.btn-teal{background:var(--teal);color:#fff;box-shadow:0 4px 16px rgba(26,107,107,.28)}
+.btn-teal:hover{background:#155858}
+.btn-teal:disabled{background:var(--soft);box-shadow:none;cursor:not-allowed}
+.btn-outline{background:transparent;color:var(--teal);border:2px solid var(--teal)}
+.btn-outline:hover{background:var(--teal-pale)}
+.btn-gold{background:var(--gold);color:#fff;box-shadow:0 4px 16px rgba(196,133,58,.28)}
+.btn-gold:hover{background:#A86E28}
+.btn-danger{background:var(--missed-bg);color:var(--missed);border:1px solid var(--missed-border)}
 
-/* ── SETUP ── */
-#setupScreen{display:none;max-width:480px;margin:0 auto;padding:2rem 1rem 3rem}
-.setup-hero{background:linear-gradient(135deg,#1A6B6B,#0D4040);border-radius:20px;padding:1.75rem;margin-bottom:1.5rem;position:relative;overflow:hidden}
-.setup-hero::after{content:'🛡️';position:absolute;right:-10px;bottom:-18px;font-size:6rem;opacity:.08;pointer-events:none}
-.setup-hero h1{font-family:'DM Serif Display',serif;font-size:1.5rem;color:#fff;line-height:1.25;margin-bottom:6px}
-.setup-hero h1 em{font-style:italic;color:#A8D8D8}
-.setup-hero p{font-size:13px;color:rgba(255,255,255,.72);line-height:1.6}
-.card{background:#fff;border:1px solid var(--border);border-radius:16px;padding:1.5rem;margin-bottom:1rem;box-shadow:0 2px 12px rgba(26,107,107,.06)}
-.card-title{font-family:'DM Serif Display',serif;font-size:1.05rem;color:var(--teal);margin-bottom:.25rem}
-.card-sub{font-size:12px;color:var(--soft);margin-bottom:1.1rem;line-height:1.5}
 label{display:block;font-size:12px;font-weight:600;color:var(--dark);margin-bottom:5px}
 label .opt{font-weight:400;color:var(--soft);font-size:11px}
 .field{margin-bottom:1rem}
@@ -105,18 +79,79 @@ input:focus{border-color:var(--teal2);box-shadow:0 0 0 3px rgba(42,144,144,.12);
 .gender-btn.girl.selected{border-color:var(--pink);background:var(--pink-bg);color:var(--pink)}
 .gender-btn.boy.selected{border-color:var(--blue);background:var(--blue-bg);color:var(--blue)}
 .notebox{background:var(--teal-light);border-left:3px solid var(--teal2);border-radius:0 10px 10px 0;padding:10px 14px;font-size:12px;color:var(--mid);line-height:1.55;margin-bottom:1rem}
+.card{background:#fff;border:1px solid var(--border);border-radius:16px;padding:1.5rem;margin-bottom:1rem;box-shadow:0 2px 12px rgba(26,107,107,.06)}
+.card-title{font-family:'DM Serif Display',serif;font-size:1.05rem;color:var(--teal);margin-bottom:.25rem}
+.card-sub{font-size:12px;color:var(--soft);margin-bottom:1.1rem;line-height:1.5}
+
+/* ── CONSENT ── */
+#consentScreen{max-width:480px;margin:0 auto;padding:2rem 1rem 3rem;display:none}
+.consent-hero{background:linear-gradient(135deg,#1A6B6B,#0D4040);border-radius:20px;padding:1.75rem;margin-bottom:1.5rem;position:relative;overflow:hidden}
+.consent-hero::after{content:'🛡️';position:absolute;right:-10px;bottom:-18px;font-size:6rem;opacity:.08;pointer-events:none}
+.brand{font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:8px}
+.consent-hero h1{font-family:'DM Serif Display',serif;font-size:1.5rem;color:#fff;line-height:1.25;margin-bottom:6px}
+.consent-hero p{font-size:13px;color:rgba(255,255,255,.72);line-height:1.6}
+.disclaimer{background:#FFF8F0;border:1.5px solid #F0C080;border-radius:12px;padding:1rem;margin-bottom:1rem}
+.disclaimer-title{font-size:12px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+.disc-body{font-size:12px;color:var(--mid);line-height:1.65}
+.disc-body p{margin-bottom:6px}
+.disc-body p:last-child{margin-bottom:0}
+.privacy-box{background:var(--teal-light);border:1.5px solid var(--teal2);border-radius:12px;padding:1rem;margin-bottom:1rem}
+.privacy-title{font-size:12px;font-weight:700;color:var(--teal);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+.priv-body{font-size:12px;color:var(--mid);line-height:1.65}
+.priv-body p{margin-bottom:6px}
+.priv-body p:last-child{margin-bottom:0}
+.consent-checks{display:flex;flex-direction:column;gap:10px;margin-bottom:1.25rem}
+.check-row{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;background:var(--teal-pale);border:1px solid var(--border);border-radius:10px;cursor:pointer}
+.check-row input[type=checkbox]{width:18px;height:18px;flex-shrink:0;margin-top:1px;cursor:pointer;accent-color:var(--teal)}
+.check-label{font-size:13px;color:var(--mid);line-height:1.5;cursor:pointer}
+.check-label strong{color:var(--dark);font-weight:600}
+
+/* ── HOME SCREEN - Baby selector ── */
+#homeScreen{max-width:480px;margin:0 auto;padding:1.5rem 1rem 3rem;display:none}
+.home-hero{background:linear-gradient(135deg,#1A6B6B,#0D4040);border-radius:20px;padding:1.5rem;margin-bottom:1.5rem;position:relative;overflow:hidden}
+.home-hero::after{content:'🛡️';position:absolute;right:-10px;bottom:-15px;font-size:5rem;opacity:.08;pointer-events:none}
+.home-hero h1{font-family:'DM Serif Display',serif;font-size:1.4rem;color:#fff;margin-bottom:.25rem}
+.home-hero p{font-size:12px;color:rgba(255,255,255,.7);line-height:1.5}
+
+/* Baby cards on home screen */
+.babies-list{display:flex;flex-direction:column;gap:10px;margin-bottom:1.25rem}
+.baby-card{background:#fff;border:1.5px solid var(--border);border-radius:16px;padding:1rem 1.25rem;display:flex;align-items:center;gap:12px;cursor:pointer;transition:all .2s;box-shadow:0 2px 8px rgba(26,107,107,.05)}
+.baby-card:hover{border-color:var(--teal);box-shadow:0 4px 16px rgba(26,107,107,.12);transform:translateY(-1px)}
+.baby-avatar{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.6rem;flex-shrink:0}
+.baby-avatar.girl{background:var(--pink-bg)}
+.baby-avatar.boy{background:var(--blue-bg)}
+.baby-info{flex:1}
+.baby-name{font-family:'DM Serif Display',serif;font-size:1rem;color:var(--dark);margin-bottom:2px}
+.baby-dob{font-size:12px;color:var(--soft)}
+.baby-stats{display:flex;gap:8px;margin-top:4px}
+.baby-stat{font-size:11px;font-weight:600;padding:2px 8px;border-radius:10px}
+.baby-stat.given{background:var(--given-bg);color:var(--given)}
+.baby-stat.missed{background:var(--missed-bg);color:var(--missed)}
+.baby-stat.soon{background:var(--soon-bg);color:var(--soon)}
+.baby-arrow{color:var(--soft);font-size:1.2rem;flex-shrink:0}
+.baby-delete{background:var(--missed-bg);border:none;border-radius:8px;color:var(--missed);font-size:12px;font-weight:600;padding:4px 8px;cursor:pointer;flex-shrink:0}
+
+/* Free limit banner */
+.limit-banner{background:linear-gradient(135deg,#1A6B6B,#0D4040);border-radius:16px;padding:1.25rem;margin-bottom:1rem}
+.limit-title{font-family:'DM Serif Display',serif;font-size:1rem;color:#fff;margin-bottom:.25rem}
+.limit-sub{font-size:12px;color:rgba(255,255,255,.7);margin-bottom:1rem;line-height:1.5}
+.limit-features{display:flex;flex-direction:column;gap:6px;margin-bottom:1rem}
+.limit-feat{font-size:12px;color:rgba(255,255,255,.85);display:flex;gap:8px;align-items:center}
+.unlock-btn{width:100%;padding:12px;background:#fff;color:var(--teal);border:none;border-radius:10px;font-family:'DM Serif Display',serif;font-size:15px;font-weight:600;cursor:pointer;transition:all .2s}
+.unlock-btn:hover{background:var(--gold-light);color:var(--gold)}
+.unlock-price{font-size:11px;color:rgba(255,255,255,.6);text-align:center;margin-top:6px}
+
+/* ── SETUP SCREEN ── */
+#setupScreen{max-width:480px;margin:0 auto;padding:2rem 1rem 3rem;display:none}
+.setup-hero{background:linear-gradient(135deg,#1A6B6B,#0D4040);border-radius:20px;padding:1.75rem;margin-bottom:1.5rem;position:relative;overflow:hidden}
+.setup-hero::after{content:'🛡️';position:absolute;right:-10px;bottom:-18px;font-size:6rem;opacity:.08;pointer-events:none}
+.setup-hero h1{font-family:'DM Serif Display',serif;font-size:1.5rem;color:#fff;line-height:1.25;margin-bottom:6px}
+.setup-hero h1 em{font-style:italic;color:#A8D8D8}
+.setup-hero p{font-size:13px;color:rgba(255,255,255,.72);line-height:1.6}
 .save-prompt{background:var(--gold-light);border:1.5px solid var(--soon-border);border-radius:12px;padding:1rem;margin-bottom:1rem;display:flex;gap:10px;align-items:center}
 .save-prompt-text{flex:1;font-size:13px;color:var(--mid);line-height:1.5}
 .save-prompt-text strong{color:var(--dark)}
 .save-prompt-btn{background:var(--gold);color:#fff;border:none;border-radius:8px;padding:8px 14px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0}
-.btn{width:100%;padding:14px;border:none;border-radius:12px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;cursor:pointer;transition:all .2s}
-.btn-teal{background:var(--teal);color:#fff;box-shadow:0 4px 16px rgba(26,107,107,.28)}
-.btn-teal:hover{background:#155858}
-.btn-teal:disabled{background:var(--soft);box-shadow:none;cursor:not-allowed}
-.btn-outline{background:transparent;color:var(--teal);border:2px solid var(--teal)}
-.btn-outline:hover{background:var(--teal-pale)}
-.btn-gold{background:var(--gold);color:#fff;box-shadow:0 4px 16px rgba(196,133,58,.28)}
-.btn-gold:hover{background:#A86E28}
 
 /* ── TRACKER ── */
 #tracker{display:none}
@@ -127,6 +162,7 @@ input:focus{border-color:var(--teal2);box-shadow:0 0 0 3px rgba(42,144,144,.12);
 .t-header-inner{max-width:560px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;gap:10px}
 .t-name{font-family:'DM Serif Display',serif;font-size:1.05rem;color:#fff}
 .t-dob{font-size:11px;color:rgba(255,255,255,.6);margin-top:1px}
+.t-back{background:rgba(255,255,255,.2);border:none;border-radius:8px;color:#fff;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;padding:6px 12px;cursor:pointer;flex-shrink:0}
 .t-prog{text-align:right}
 .t-prog-num{font-size:11px;color:rgba(255,255,255,.7)}
 .t-prog-bar{width:80px;height:4px;background:rgba(255,255,255,.2);border-radius:2px;overflow:hidden;margin-top:4px;margin-left:auto}
@@ -166,8 +202,6 @@ input:focus{border-color:var(--teal2);box-shadow:0 0 0 3px rgba(42,144,144,.12);
 .hosp-input{width:100%;padding:8px 11px;border:1.5px solid var(--given-border);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:12px;color:var(--dark);background:#fff;outline:none}
 .hosp-input:focus{border-color:var(--given);box-shadow:0 0 0 3px rgba(30,122,80,.1)}
 .hpv-note{background:var(--pink-bg);border:1px solid var(--pink-border);border-radius:10px;padding:8px 12px;margin-top:6px;font-size:11px;color:var(--pink);font-weight:500}
-
-/* ── SUMMARY ── */
 .summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;max-width:560px;margin:0 auto;padding:1rem}
 .sum{text-align:center;padding:10px 6px;border-radius:12px}
 .sum.given{background:var(--given-bg)}
@@ -179,7 +213,7 @@ input:focus{border-color:var(--teal2);box-shadow:0 0 0 3px rgba(42,144,144,.12);
 .sum.upcoming .sum-n{color:var(--teal)}
 .sum-l{font-size:11px;font-weight:600;color:var(--soft);margin-top:2px}
 
-/* ── LOCKED CALENDAR SECTION ── */
+/* Locked calendar section */
 .locked-section{max-width:560px;margin:0 auto;padding:0 1rem 1rem}
 .locked-card{background:linear-gradient(135deg,#1A6B6B,#0D4040);border-radius:20px;padding:1.5rem;position:relative;overflow:hidden}
 .locked-card::after{content:'🔒';position:absolute;right:-5px;top:-5px;font-size:5rem;opacity:.1}
@@ -187,22 +221,17 @@ input:focus{border-color:var(--teal2);box-shadow:0 0 0 3px rgba(42,144,144,.12);
 .locked-sub{font-size:13px;color:rgba(255,255,255,.75);line-height:1.6;margin-bottom:1.25rem}
 .locked-features{display:flex;flex-direction:column;gap:8px;margin-bottom:1.25rem}
 .locked-feature{display:flex;gap:10px;align-items:center;font-size:13px;color:rgba(255,255,255,.9)}
-.locked-feature-icon{font-size:1rem;flex-shrink:0}
 .locked-blur{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:12px;padding:1rem;margin-bottom:1.25rem;filter:blur(2px);pointer-events:none}
 .locked-blur-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.1)}
 .locked-blur-row:last-child{border-bottom:none}
 .locked-blur-text{font-size:12px;color:rgba(255,255,255,.6)}
 .locked-blur-btn{background:rgba(255,255,255,.2);color:#fff;border:none;border-radius:6px;padding:5px 10px;font-size:11px}
-.unlock-btn{width:100%;padding:14px;background:#fff;color:var(--teal);border:none;border-radius:12px;font-family:'DM Serif Display',serif;font-size:16px;font-weight:600;cursor:pointer;transition:all .2s;box-shadow:0 4px 16px rgba(0,0,0,.2)}
-.unlock-btn:hover{background:var(--gold-light);color:var(--gold)}
+.unlock-main-btn{width:100%;padding:14px;background:#fff;color:var(--teal);border:none;border-radius:12px;font-family:'DM Serif Display',serif;font-size:16px;font-weight:600;cursor:pointer;transition:all .2s;box-shadow:0 4px 16px rgba(0,0,0,.2)}
+.unlock-main-btn:hover{background:var(--gold-light);color:var(--gold)}
 .unlock-price{font-size:12px;color:rgba(255,255,255,.6);text-align:center;margin-top:8px}
 
 .tracker-disclaimer{background:#f9f9f7;border:1px solid var(--border);border-radius:12px;padding:.75rem 1rem;margin:0 1rem 1rem;font-size:11px;color:var(--soft);line-height:1.6;text-align:center;max-width:560px;margin-left:auto;margin-right:auto}
 .t-footer{text-align:center;font-size:11px;color:var(--soft);padding:.5rem 1rem 1rem;line-height:1.7}
-
-/* ── STORAGE NOTICE ── */
-.storage-notice{background:var(--success-bg);border:1px solid var(--given-border);border-radius:10px;padding:8px 14px;margin:0 0 1rem;font-size:12px;color:var(--given);line-height:1.5;display:none}
-.storage-notice.show{display:block}
 
 @media(max-width:440px){.field-row{grid-template-columns:1fr}.legend-inner{gap:8px}}
 </style>
@@ -212,94 +241,106 @@ input:focus{border-color:var(--teal2);box-shadow:0 0 0 3px rgba(42,144,144,.12);
 <!-- INSTALL BANNER -->
 <div id="installBanner">
   <div class="install-inner">
-    <div class="install-icon">📱</div>
-    <div class="install-text"><strong>Save MamaShield to your home screen</strong> — your baby's data stays safe even when offline</div>
+    <div style="font-size:1.4rem;flex-shrink:0">📱</div>
+    <div class="install-text"><strong>Save MamaShield to your home screen</strong> — access all your babies' trackers with one tap</div>
     <button class="install-btn" onclick="showSaveModal()">How to save</button>
     <button class="install-close" onclick="document.getElementById('installBanner').style.display='none'">✕</button>
   </div>
 </div>
 
-<!-- SAVE TO HOME SCREEN MODAL -->
+<!-- SAVE MODAL -->
 <div id="saveModal" onclick="if(event.target===this)closeSaveModal()">
-  <div class="save-sheet">
+  <div class="sheet">
     <h2>📱 Save MamaShield to your phone</h2>
-    <p class="sub">Save this tracker to your home screen — your baby's data stays permanently on your phone even when you close the app.</p>
+    <p class="sheet-sub">Save to your home screen — your babies' data stays safe and accessible anytime.</p>
     <div class="os-tab">
       <button class="os-btn active" id="osAndroid" onclick="switchOS('android')">🤖 Android</button>
       <button class="os-btn" id="osIphone" onclick="switchOS('iphone')">🍎 iPhone</button>
     </div>
     <div class="os-steps show" id="stepsAndroid">
-      <div class="os-step"><div class="os-num">1</div><div class="os-text">Open this page in <strong>Google Chrome</strong> on your Android phone</div></div>
-      <div class="os-step"><div class="os-num">2</div><div class="os-text">Tap the <strong>three dots menu (⋮)</strong> at the top right of Chrome</div></div>
-      <div class="os-step"><div class="os-num">3</div><div class="os-text">Tap <strong>"Add to Home screen"</strong></div></div>
-      <div class="os-step"><div class="os-num">4</div><div class="os-text">Tap <strong>"Add"</strong> on the popup</div></div>
-      <div class="os-step"><div class="os-num">5</div><div class="os-text">✅ Look for the <strong>MamaShield MS shield icon</strong> on your home screen. Your baby's data is now saved permanently.</div></div>
+      <div class="os-step"><div class="os-num">1</div><div class="os-text">Open in <strong>Google Chrome</strong></div></div>
+      <div class="os-step"><div class="os-num">2</div><div class="os-text">Tap <strong>three dots menu (⋮)</strong> top right</div></div>
+      <div class="os-step"><div class="os-num">3</div><div class="os-text">Tap <strong>"Add to Home screen"</strong> → <strong>"Add"</strong></div></div>
+      <div class="os-step"><div class="os-num">4</div><div class="os-text">✅ MamaShield icon appears on your home screen</div></div>
     </div>
     <div class="os-steps" id="stepsIphone">
-      <div class="os-step"><div class="os-num">1</div><div class="os-text">Open this page in <strong>Safari</strong> on your iPhone</div></div>
-      <div class="os-step"><div class="os-num">2</div><div class="os-text">Tap the <strong>Share button ⬆️</strong> at the bottom of the screen</div></div>
-      <div class="os-step"><div class="os-num">3</div><div class="os-text">Scroll down and tap <strong>"Add to Home Screen"</strong></div></div>
-      <div class="os-step"><div class="os-num">4</div><div class="os-text">Tap <strong>"Add"</strong> at the top right</div></div>
-      <div class="os-step"><div class="os-num">5</div><div class="os-text">✅ The <strong>MamaShield MS shield icon</strong> now appears on your home screen. Data stays saved permanently.</div></div>
+      <div class="os-step"><div class="os-num">1</div><div class="os-text">Open in <strong>Safari</strong></div></div>
+      <div class="os-step"><div class="os-num">2</div><div class="os-text">Tap <strong>Share button ⬆️</strong> at the bottom</div></div>
+      <div class="os-step"><div class="os-num">3</div><div class="os-text">Tap <strong>"Add to Home Screen"</strong> → <strong>"Add"</strong></div></div>
+      <div class="os-step"><div class="os-num">4</div><div class="os-text">✅ MamaShield icon appears on your home screen</div></div>
     </div>
     <button class="close-sheet" onclick="closeSaveModal()">Got it — close this</button>
   </div>
 </div>
 
-<!-- CONSENT SCREEN -->
+<!-- ══ CONSENT SCREEN ══ -->
 <div id="consentScreen">
   <div class="consent-hero">
     <p class="brand">MamaShield · Blessing's Vestule</p>
     <h1>Before you start — please read this</h1>
-    <p>MamaShield is a free scheduling and reminder tool. Please take 60 seconds to read what it is and what it is not.</p>
+    <p>MamaShield is a free scheduling tool. Please read what it is and what it is not.</p>
   </div>
   <div class="disclaimer">
     <div class="disclaimer-title">⚕️ Medical Disclaimer</div>
     <div class="disc-body">
       <p><strong>MamaShield is not a medical service.</strong> It is a personal scheduling tool to help you track your baby's Nigerian NPI immunization appointments.</p>
-      <p>MamaShield does <strong>not</strong> provide medical advice, diagnoses, or treatment recommendations. All vaccine schedule information is sourced from Nigeria's <strong>National Programme on Immunization (NPI) 2025–2026 schedule</strong>, published by the NPHCDA.</p>
-      <p>MamaShield is <strong>not affiliated with</strong> the NMA, MDCN, or NPHCDA. <strong>Always consult a qualified healthcare professional</strong> for all medical decisions. If your baby is unwell, seek immediate medical attention.</p>
+      <p>MamaShield does <strong>not</strong> provide medical advice, diagnoses, or treatment recommendations. All vaccine information is sourced from Nigeria's <strong>NPI 2025–2026 schedule</strong> published by NPHCDA.</p>
+      <p>MamaShield is <strong>not affiliated with</strong> the NMA, MDCN, or NPHCDA. <strong>Always consult a qualified healthcare professional</strong> for medical decisions. If your baby is unwell, seek immediate medical attention.</p>
     </div>
   </div>
   <div class="privacy-box">
-    <div class="privacy-title">🔒 Your Data Privacy — Nigeria Data Protection Act 2023</div>
+    <div class="privacy-title">🔒 Data Privacy — Nigeria Data Protection Act 2023</div>
     <div class="priv-body">
-      <p>In compliance with the <strong>Nigeria Data Protection Act (NDPA) 2023</strong>:</p>
-      <p><strong>What we collect:</strong> Baby's name, date of birth, sex, blood group (optional), mother's name (optional), and clinic name (optional).</p>
-      <p><strong>Where your data is stored:</strong> <strong>Only on your device.</strong> MamaShield uses your phone's secure local app storage (IndexedDB). Your data is never transmitted to any server. It persists on your device between sessions and survives browser cache clearing.</p>
-      <p><strong>To erase your data:</strong> Use the "Clear my data" button inside the tracker at any time.</p>
-      <p><strong>Your rights under NDPA 2023:</strong> You may withdraw consent and erase your data at any time.</p>
+      <p><strong>What we collect:</strong> Baby's name, date of birth, sex, and optionally blood group, mother's name, and clinic name.</p>
+      <p><strong>Where stored:</strong> <strong>Only on your device.</strong> MamaShield uses secure local device storage (IndexedDB). Your data is never transmitted to any server and survives browser cache clearing.</p>
+      <p><strong>To erase:</strong> Use "Clear my data" inside the tracker anytime.</p>
       <p><strong>Data Controller:</strong> Blessing's Vestule · blessingsvestule@gmail.com</p>
     </div>
   </div>
-  <div class="consent-card">
-    <p class="consent-title">Your consent — please tick all boxes to continue</p>
+  <div class="card">
+    <p class="card-title">Your consent — tick all boxes to continue</p>
     <div class="consent-checks">
-      <label class="check-row"><input type="checkbox" id="c1" onchange="checkConsent()"/><span class="check-label">I understand that <strong>MamaShield is not a medical service</strong> and does not replace a qualified healthcare professional.</span></label>
-      <label class="check-row"><input type="checkbox" id="c2" onchange="checkConsent()"/><span class="check-label">I understand the vaccine schedule is based on the <strong>Nigerian NPI 2025–2026 schedule</strong> and I will confirm dates with my doctor or health centre.</span></label>
-      <label class="check-row"><input type="checkbox" id="c3" onchange="checkConsent()"/><span class="check-label">I <strong>freely consent</strong> to entering my baby's details. I understand my data is stored only on my device using secure local storage and is never shared with any third party.</span></label>
-      <label class="check-row"><input type="checkbox" id="c4" onchange="checkConsent()"/><span class="check-label">I understand I can <strong>erase my data at any time</strong> using the "Clear my data" button inside the tracker.</span></label>
+      <label class="check-row"><input type="checkbox" id="c1" onchange="checkConsent()"/><span class="check-label">I understand <strong>MamaShield is not a medical service</strong> and does not replace a qualified healthcare professional.</span></label>
+      <label class="check-row"><input type="checkbox" id="c2" onchange="checkConsent()"/><span class="check-label">I understand the vaccine schedule is based on the <strong>Nigerian NPI 2025–2026 schedule</strong> and I will confirm dates with my doctor.</span></label>
+      <label class="check-row"><input type="checkbox" id="c3" onchange="checkConsent()"/><span class="check-label">I <strong>freely consent</strong> to entering my baby's details. My data stays only on my device and is never shared.</span></label>
+      <label class="check-row"><input type="checkbox" id="c4" onchange="checkConsent()"/><span class="check-label">I can <strong>erase my data anytime</strong> using the "Clear my data" button.</span></label>
     </div>
-    <button class="btn btn-teal" id="proceedBtn" onclick="proceedToSetup()" disabled>I Agree — Open My Baby's Tracker →</button>
+    <button class="btn btn-teal" id="proceedBtn" onclick="proceedToHome()" disabled>I Agree — Open MamaShield →</button>
   </div>
 </div>
 
-<!-- SETUP SCREEN -->
+<!-- ══ HOME SCREEN ══ -->
+<div id="homeScreen">
+  <div class="home-hero">
+    <p class="brand">MamaShield · Blessing's Vestule</p>
+    <h1 id="homeGreeting">My Babies</h1>
+    <p>Tap a baby to open their vaccine tracker</p>
+  </div>
+
+  <div id="babiesList" class="babies-list"></div>
+
+  <div id="addBabySection"></div>
+
+  <div style="margin-top:1rem">
+    <button class="btn btn-outline" onclick="showSaveModal()" style="font-size:13px;padding:10px">📱 Save to phone home screen</button>
+  </div>
+</div>
+
+<!-- ══ SETUP SCREEN ══ -->
 <div id="setupScreen">
   <div class="setup-hero">
     <p class="brand">MamaShield · Blessing's Vestule</p>
-    <h1>Your baby's tracker.<br/><em>Remembers everything.</em></h1>
-    <p>Enter your baby's details once — saved permanently on your phone. Every vaccine date calculates automatically. Just tap when a vaccine is given.</p>
+    <h1 id="setupTitle">Add your <em>baby's details</em></h1>
+    <p>Fill in once — saved permanently. Every vaccine date calculates automatically.</p>
   </div>
   <div class="save-prompt">
     <div style="font-size:1.4rem;flex-shrink:0">📱</div>
-    <div class="save-prompt-text"><strong>Save to your phone home screen first</strong> so your baby's data is always accessible with one tap.</div>
+    <div class="save-prompt-text"><strong>Save to phone home screen</strong> for one-tap access anytime.</div>
     <button class="save-prompt-btn" onclick="showSaveModal()">How to save</button>
   </div>
   <div class="card">
-    <p class="card-title">Your baby's details</p>
-    <p class="card-sub">Fill in once — saved permanently on your phone. You will never need to re-enter these.</p>
-    <div id="storageNotice" class="storage-notice">✅ Welcome back! Your baby's data has been restored from your device.</div>
+    <p class="card-title" id="setupCardTitle">Baby's details</p>
+    <p class="card-sub">Fill in once — saved permanently on your phone.</p>
     <div class="field"><label>Baby's name</label><input type="text" id="sName" placeholder="e.g. Adaeze, Emeka, Fatima…" maxlength="30"/></div>
     <div class="field-row">
       <div class="field"><label>Date of birth</label><input type="date" id="sDob" max=""/></div>
@@ -313,19 +354,31 @@ input:focus{border-color:var(--teal2);box-shadow:0 0 0 3px rgba(42,144,144,.12);
     </div>
     <div class="field-row">
       <div class="field"><label>Mother's name <span class="opt">(optional)</span></label><input type="text" id="sMum" placeholder="Your name" maxlength="30"/></div>
-      <div class="field"><label>Default clinic <span class="opt">(optional)</span></label><input type="text" id="sClinic" placeholder="Clinic name" maxlength="40"/></div>
+      <div class="field"><label>Clinic <span class="opt">(optional)</span></label><input type="text" id="sClinic" placeholder="Clinic name" maxlength="40"/></div>
     </div>
-    <div class="notebox">💡 All NPI vaccines are <strong>FREE</strong> at government health centres across Nigeria. Girls also receive the HPV vaccine at age 9 — included in this tracker.</div>
-    <button class="btn btn-teal" onclick="launch()">Open My Baby's Tracker →</button>
+    <div class="notebox">💡 All NPI vaccines are <strong>FREE</strong> at government health centres. Girls also receive HPV vaccine at age 9.</div>
+    <button class="btn btn-teal" id="saveBabyBtn" onclick="saveBaby()">Save Baby's Profile →</button>
+    <div style="margin-top:10px">
+      <button class="btn btn-outline" onclick="goHome()" style="font-size:13px;padding:10px">← Back</button>
+    </div>
   </div>
 </div>
 
-<!-- TRACKER SCREEN -->
+<!-- ══ TRACKER SCREEN ══ -->
 <div id="tracker">
   <div class="t-header neutral" id="tHeader">
     <div class="t-header-inner">
-      <div><div class="t-name" id="tName"></div><div class="t-dob" id="tDob"></div></div>
-      <div class="t-prog"><div class="t-prog-num" id="tProgNum">0 given</div><div class="t-prog-bar"><div class="t-prog-fill" id="tProgFill" style="width:0%"></div></div></div>
+      <div>
+        <div class="t-name" id="tName"></div>
+        <div class="t-dob" id="tDob"></div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <button class="t-back" onclick="goHome()">← All babies</button>
+        <div class="t-prog">
+          <div class="t-prog-num" id="tProgNum">0 given</div>
+          <div class="t-prog-bar"><div class="t-prog-fill" id="tProgFill" style="width:0%"></div></div>
+        </div>
+      </div>
     </div>
   </div>
   <div class="legend"><div class="legend-inner">
@@ -341,34 +394,33 @@ input:focus{border-color:var(--teal2);box-shadow:0 0 0 3px rgba(42,144,144,.12);
     <div class="sum upcoming"><div class="sum-n" id="sPending">0</div><div class="sum-l">Upcoming</div></div>
   </div>
 
-  <!-- LOCKED CALENDAR SECTION -->
+  <!-- LOCKED CALENDAR -->
   <div class="locked-section">
     <div class="locked-card">
       <p class="locked-title">📅 Never miss a vaccine date</p>
-      <p class="locked-sub">Add every appointment to your Google Calendar with automatic sound alerts — 7 days and 1 day before each vaccine. Your phone reminds you so you never have to remember.</p>
+      <p class="locked-sub">Add every appointment to your Google Calendar with automatic sound alerts — available in the MamaShield Full Bundle.</p>
       <div class="locked-features">
-        <div class="locked-feature"><span class="locked-feature-icon">🔔</span><span>One-tap Google Calendar reminders for every vaccine</span></div>
-        <div class="locked-feature"><span class="locked-feature-icon">🔊</span><span>Sound alerts that ring even on silent mode</span></div>
-        <div class="locked-feature"><span class="locked-feature-icon">📋</span><span>4-page printable tracker — permanent paper record</span></div>
-        <div class="locked-feature"><span class="locked-feature-icon">📖</span><span>Missed vaccine catch-up guide</span></div>
-        <div class="locked-feature"><span class="locked-feature-icon">📝</span><span>Vaccine reactions log and doctor visit notes</span></div>
+        <div class="locked-feature"><span>🔔</span><span>One-tap Google Calendar reminders</span></div>
+        <div class="locked-feature"><span>🔊</span><span>Sound alerts — rings even on silent mode</span></div>
+        <div class="locked-feature"><span>👶</span><span>Unlimited baby profiles</span></div>
+        <div class="locked-feature"><span>📋</span><span>4-page printable tracker PDF</span></div>
+        <div class="locked-feature"><span>📖</span><span>Missed vaccine catch-up guide</span></div>
       </div>
-      <!-- Blurred preview of calendar buttons -->
       <div class="locked-blur">
         <div class="locked-blur-row"><span class="locked-blur-text">At Birth — vaccines due</span><span class="locked-blur-btn">+ Add to Calendar</span></div>
         <div class="locked-blur-row"><span class="locked-blur-text">6 Weeks — vaccines due</span><span class="locked-blur-btn">+ Add to Calendar</span></div>
         <div class="locked-blur-row"><span class="locked-blur-text">10 Weeks — vaccines due</span><span class="locked-blur-btn">+ Add to Calendar</span></div>
       </div>
-      <button class="unlock-btn" onclick="window.open('SELAR_PAID_LINK_HERE','_blank')">🔓 Unlock Full MamaShield Bundle →</button>
+      <button class="unlock-main-btn" onclick="window.open('SELAR_LINK_HERE','_blank')">🔓 Unlock Full MamaShield Bundle →</button>
       <p class="unlock-price">₦2,500 on Selar · Instant access · One-time payment</p>
     </div>
   </div>
 
   <div class="tracker-disclaimer">⚕️ MamaShield is a scheduling tool only — not a medical service. Always confirm vaccine dates with your paediatrician or nearest government health centre. Based on Nigerian NPI 2025–2026 schedule (NPHCDA).</div>
-  <div class="t-footer" id="tFooter"></div>
-  <div style="padding:0 1rem 1rem;max-width:560px;margin:0 auto;display:flex;gap:10px;flex-direction:column">
-    <button class="btn btn-outline" onclick="editProfile()">✏️ Edit baby's details</button>
-    <button class="btn" style="background:var(--missed-bg);color:var(--missed);border:1px solid var(--missed-border)" onclick="clearData()">🗑️ Clear my data</button>
+  <div class="t-footer">MamaShield · Blessing's Vestule 🛡️<br/>Nigerian NPI Schedule 2025–2026</div>
+  <div style="padding:0 1rem 2rem;max-width:560px;margin:0 auto;display:flex;flex-direction:column;gap:8px">
+    <button class="btn btn-outline" onclick="editCurrentBaby()" style="font-size:13px;padding:10px">✏️ Edit baby's details</button>
+    <button class="btn btn-danger" onclick="deleteCurrentBaby()" style="font-size:13px;padding:10px">🗑️ Remove this baby</button>
   </div>
 </div>
 
@@ -404,75 +456,106 @@ const VAX_GIRL=[
   {age:"9 Years (Girls)",days:3377,name:"HPV Vaccine — Dose 2",protects:"Cervical cancer prevention (6 months after dose 1)",hpv:true},
 ];
 
+const FREE_BABY_LIMIT = 1; // Free version: 1 baby only
+const SELAR_LINK = 'SELAR_LINK_HERE'; // Replace with actual Selar link
+
 // ── State ──
-let VAX=[],given=[],hospitals=[],DOB=null,gender='';
-let DB=null;
-const DB_NAME='MamaShieldDB',DB_VERSION=1,STORE='babyData';
+let DB = null;
+let currentBabyId = null;
+let currentVAX = [];
+let currentGiven = [];
+let currentHospitals = [];
+let currentDOB = null;
+let currentGender = '';
+let editingBabyId = null;
+let gender = '';
+
+const DB_NAME = 'MamaShieldDB', DB_VERSION = 2, BABIES_STORE = 'babies';
+const MO = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const addD = (d,n) => { const r=new Date(d); r.setDate(r.getDate()+n); return r; };
+const fmt = d => `${d.getDate()} ${MO[d.getMonth()]} ${d.getFullYear()}`;
+const today = () => { const t=new Date(); t.setHours(0,0,0,0); return t; };
+const dL = due => Math.round((due-today())/86400000);
+const uid = () => Date.now().toString(36) + Math.random().toString(36).substr(2);
 
 // ── IndexedDB ──
-function openDB(){
-  return new Promise((resolve,reject)=>{
-    const req=indexedDB.open(DB_NAME,DB_VERSION);
-    req.onupgradeneeded=e=>{
-      const db=e.target.result;
-      if(!db.objectStoreNames.contains(STORE)) db.createObjectStore(STORE,{keyPath:'id'});
+function openDB() {
+  return new Promise((resolve,reject) => {
+    const req = indexedDB.open(DB_NAME, DB_VERSION);
+    req.onupgradeneeded = e => {
+      const db = e.target.result;
+      // Create babies store (replaces old babyData store)
+      if (!db.objectStoreNames.contains(BABIES_STORE)) {
+        db.createObjectStore(BABIES_STORE, {keyPath:'id'});
+      }
     };
-    req.onsuccess=e=>{resolve(e.target.result);};
-    req.onerror=e=>{reject(e);};
+    req.onsuccess = e => resolve(e.target.result);
+    req.onerror = e => reject(e);
   });
 }
 
-async function saveToDB(data){
-  if(!DB) DB=await openDB();
-  return new Promise((resolve,reject)=>{
-    const tx=DB.transaction(STORE,'readwrite');
-    tx.objectStore(STORE).put({id:'babyProfile',...data});
-    tx.oncomplete=()=>resolve();
-    tx.onerror=e=>reject(e);
+async function getAllBabies() {
+  if(!DB) DB = await openDB();
+  return new Promise((resolve,reject) => {
+    const tx = DB.transaction(BABIES_STORE,'readonly');
+    const req = tx.objectStore(BABIES_STORE).getAll();
+    req.onsuccess = e => resolve(e.target.result || []);
+    req.onerror = e => reject(e);
   });
 }
 
-async function loadFromDB(){
-  if(!DB) DB=await openDB();
-  return new Promise((resolve,reject)=>{
-    const tx=DB.transaction(STORE,'readonly');
-    const req=tx.objectStore(STORE).get('babyProfile');
-    req.onsuccess=e=>resolve(e.target.result);
-    req.onerror=e=>reject(e);
+async function getBaby(id) {
+  if(!DB) DB = await openDB();
+  return new Promise((resolve,reject) => {
+    const tx = DB.transaction(BABIES_STORE,'readonly');
+    const req = tx.objectStore(BABIES_STORE).get(id);
+    req.onsuccess = e => resolve(e.target.result);
+    req.onerror = e => reject(e);
   });
 }
 
-async function clearDB(){
-  if(!DB) DB=await openDB();
-  return new Promise((resolve,reject)=>{
-    const tx=DB.transaction(STORE,'readwrite');
-    tx.objectStore(STORE).clear();
-    tx.oncomplete=()=>resolve();
-    tx.onerror=e=>reject(e);
+async function saveBabyToDB(baby) {
+  if(!DB) DB = await openDB();
+  return new Promise((resolve,reject) => {
+    const tx = DB.transaction(BABIES_STORE,'readwrite');
+    tx.objectStore(BABIES_STORE).put(baby);
+    tx.oncomplete = () => resolve();
+    tx.onerror = e => reject(e);
+  });
+}
+
+async function deleteBabyFromDB(id) {
+  if(!DB) DB = await openDB();
+  return new Promise((resolve,reject) => {
+    const tx = DB.transaction(BABIES_STORE,'readwrite');
+    tx.objectStore(BABIES_STORE).delete(id);
+    tx.oncomplete = () => resolve();
+    tx.onerror = e => reject(e);
   });
 }
 
 // ── Helpers ──
-const MO=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-const addD=(d,n)=>{const r=new Date(d);r.setDate(r.getDate()+n);return r;};
-const fmt=d=>`${d.getDate()} ${MO[d.getMonth()]} ${d.getFullYear()}`;
-const today=()=>{const t=new Date();t.setHours(0,0,0,0);return t;};
-const dL=due=>Math.round((due-today())/86400000);
-
-function getState(i){
-  if(given[i]) return 'given';
-  const dl=dL(addD(DOB,VAX[i].days));
-  if(dl<0) return 'missed';
-  if(dl<=14) return 'soon';
+function getState(i) {
+  if(currentGiven[i]) return 'given';
+  const dl = dL(addD(currentDOB, currentVAX[i].days));
+  if(dl < 0) return 'missed';
+  if(dl <= 14) return 'soon';
   return 'future';
 }
 
-function chip(state,dueDate){
-  const dl=dL(dueDate);
-  if(state==='given') return`<span class="vstatus given">✓ Given</span>`;
-  if(state==='missed') return`<span class="vstatus missed">⚠️ Overdue — was due ${fmt(dueDate)}</span>`;
-  if(state==='soon') return dl===0?`<span class="vstatus soon">📅 Due TODAY</span>`:`<span class="vstatus soon">📅 Due in ${dl} day${dl>1?'s':''} — ${fmt(dueDate)}</span>`;
-  return`<span class="vstatus future">Due ${fmt(dueDate)}</span>`;
+function chip(state, dueDate) {
+  const dl = dL(dueDate);
+  if(state==='given') return `<span class="vstatus given">✓ Given</span>`;
+  if(state==='missed') return `<span class="vstatus missed">⚠️ Overdue — was due ${fmt(dueDate)}</span>`;
+  if(state==='soon') return dl===0 ? `<span class="vstatus soon">📅 Due TODAY</span>` : `<span class="vstatus soon">📅 Due in ${dl} day${dl>1?'s':''} — ${fmt(dueDate)}</span>`;
+  return `<span class="vstatus future">Due ${fmt(dueDate)}</span>`;
+}
+
+function showScreen(id) {
+  ['consentScreen','homeScreen','setupScreen','tracker'].forEach(s => {
+    document.getElementById(s).style.display = s===id ? 'block' : 'none';
+  });
+  window.scrollTo({top:0,behavior:'smooth'});
 }
 
 // ── Modals ──
@@ -485,106 +568,253 @@ function switchOS(os){
   document.getElementById('stepsIphone').className='os-steps'+(os==='iphone'?' show':'');
 }
 
-// ── PWA install ──
-let deferredPrompt=null;
-window.addEventListener('beforeinstallprompt',e=>{
-  e.preventDefault();deferredPrompt=e;
+// ── PWA ──
+let deferredPrompt = null;
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault(); deferredPrompt = e;
   document.getElementById('installBanner').classList.add('show');
 });
-document.querySelector('.install-btn').addEventListener('click',()=>{
-  if(deferredPrompt){deferredPrompt.prompt();deferredPrompt.userChoice.then(()=>{deferredPrompt=null;document.getElementById('installBanner').style.display='none';});}
+document.querySelector('.install-btn').addEventListener('click', () => {
+  if(deferredPrompt){ deferredPrompt.prompt(); deferredPrompt.userChoice.then(()=>{ deferredPrompt=null; document.getElementById('installBanner').style.display='none'; }); }
   else showSaveModal();
 });
 
 // ── Consent ──
-function checkConsent(){
-  const all=['c1','c2','c3','c4'].every(id=>document.getElementById(id).checked);
-  document.getElementById('proceedBtn').disabled=!all;
+function checkConsent() {
+  const all = ['c1','c2','c3','c4'].every(id=>document.getElementById(id).checked);
+  document.getElementById('proceedBtn').disabled = !all;
 }
 
-async function proceedToSetup(){
-  document.getElementById('consentScreen').style.display='none';
-  document.getElementById('setupScreen').style.display='block';
-  // Try to load saved data
-  try{
-    const saved=await loadFromDB();
-    if(saved && saved.babyName){
-      document.getElementById('sName').value=saved.babyName||'';
-      document.getElementById('sDob').value=saved.dob||'';
-      document.getElementById('sBlood').value=saved.blood||'';
-      document.getElementById('sMum').value=saved.mumName||'';
-      document.getElementById('sClinic').value=saved.clinic||'';
-      if(saved.gender) selectGender(saved.gender);
-      document.getElementById('storageNotice').classList.add('show');
-    }
-  }catch(e){console.log('No saved data');}
-  window.scrollTo({top:0,behavior:'smooth'});
+async function proceedToHome() {
+  // Mark consent given
+  if(!DB) DB = await openDB();
+  try { await saveBabyToDB({id:'__consent__', given:true}); } catch(e){}
+  goHome();
 }
 
-function selectGender(g){
-  gender=g;
+// ── HOME SCREEN ──
+async function goHome() {
+  showScreen('homeScreen');
+  await renderHome();
+}
+
+async function renderHome() {
+  const babies = await getAllBabies();
+  const realBabies = babies.filter(b => b.id !== '__consent__');
+
+  // Greeting
+  const hour = new Date().getHours();
+  const greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
+  if(realBabies.length > 0) {
+    const mumName = realBabies[0].mumName;
+    document.getElementById('homeGreeting').textContent = mumName ? `${greeting}, ${mumName}` : 'My Babies';
+  } else {
+    document.getElementById('homeGreeting').textContent = 'Welcome to MamaShield 🛡️';
+  }
+
+  // Babies list
+  const list = document.getElementById('babiesList');
+  list.innerHTML = '';
+
+  if(realBabies.length === 0) {
+    list.innerHTML = `<div style="text-align:center;padding:2rem 1rem;color:var(--soft)">
+      <div style="font-size:3rem;margin-bottom:1rem">👶</div>
+      <p style="font-size:14px;font-weight:600;color:var(--mid);margin-bottom:.5rem">No babies added yet</p>
+      <p style="font-size:13px">Tap the button below to add your first baby</p>
+    </div>`;
+  }
+
+  realBabies.forEach(baby => {
+    const dob = new Date(baby.dob + 'T00:00:00');
+    const vax = [...VAX_BASE,...(baby.gender==='girl'?VAX_GIRL:[])];
+    const given = baby.givenState || new Array(vax.length).fill(false);
+    const givenCount = given.filter(Boolean).length;
+    const missedCount = vax.filter((_,i) => {
+      if(given[i]) return false;
+      return dL(addD(dob, vax[i].days)) < 0;
+    }).length;
+    const soonCount = vax.filter((_,i) => {
+      if(given[i]) return false;
+      const dl = dL(addD(dob, vax[i].days));
+      return dl >= 0 && dl <= 14;
+    }).length;
+
+    const card = document.createElement('div');
+    card.className = 'baby-card';
+    card.innerHTML = `
+      <div class="baby-avatar ${baby.gender||'neutral'}">${baby.gender==='girl'?'👧':baby.gender==='boy'?'👦':'👶'}</div>
+      <div class="baby-info" onclick="openBaby('${baby.id}')" style="cursor:pointer">
+        <div class="baby-name">${baby.babyName}</div>
+        <div class="baby-dob">Born ${fmt(dob)}</div>
+        <div class="baby-stats">
+          <span class="baby-stat given">✓ ${givenCount} given</span>
+          ${missedCount>0?`<span class="baby-stat missed">⚠️ ${missedCount} missed</span>`:''}
+          ${soonCount>0?`<span class="baby-stat soon">📅 ${soonCount} due soon</span>`:''}
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end">
+        <div class="baby-arrow" onclick="openBaby('${baby.id}')" style="cursor:pointer">›</div>
+      </div>`;
+    list.appendChild(card);
+  });
+
+  // Add baby section
+  const addSection = document.getElementById('addBabySection');
+  addSection.innerHTML = '';
+
+  if(realBabies.length < FREE_BABY_LIMIT) {
+    // Can add more babies (free limit not reached)
+    const addBtn = document.createElement('button');
+    addBtn.className = 'btn btn-teal';
+    addBtn.style.marginBottom = '1rem';
+    addBtn.innerHTML = '+ Add Baby';
+    addBtn.onclick = () => showSetup();
+    addSection.appendChild(addBtn);
+  } else {
+    // Free limit reached — show upgrade prompt
+    const limitDiv = document.createElement('div');
+    limitDiv.className = 'limit-banner';
+    limitDiv.innerHTML = `
+      <p class="limit-title">👶 Have another baby to track?</p>
+      <p class="limit-sub">The free version tracks 1 baby. Upgrade to MamaShield Full Bundle to track unlimited babies — plus Google Calendar reminders and more.</p>
+      <div class="limit-features">
+        <div class="limit-feat"><span>👶</span><span>Unlimited baby profiles</span></div>
+        <div class="limit-feat"><span>🔔</span><span>Google Calendar reminders with sound</span></div>
+        <div class="limit-feat"><span>📋</span><span>4-page printable tracker PDF</span></div>
+        <div class="limit-feat"><span>📖</span><span>Missed vaccine catch-up guide</span></div>
+      </div>
+      <button class="unlock-btn" onclick="window.open('${SELAR_LINK}','_blank')">🔓 Upgrade — ₦2,500</button>
+      <p class="unlock-price">Instant access · One-time payment · Selar</p>`;
+    addSection.appendChild(limitDiv);
+  }
+}
+
+// ── SETUP SCREEN ──
+function showSetup(babyId=null) {
+  editingBabyId = babyId;
+  gender = '';
+  document.getElementById('setupTitle').innerHTML = babyId ? 'Edit baby\'s <em>details</em>' : 'Add your <em>baby\'s details</em>';
+  document.getElementById('setupCardTitle').textContent = babyId ? 'Edit baby\'s details' : 'Baby\'s details';
+  document.getElementById('saveBabyBtn').textContent = babyId ? 'Update Baby\'s Profile →' : 'Save Baby\'s Profile →';
+
+  // Clear fields
+  ['sName','sDob','sBlood','sMum','sClinic'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('btnGirl').className='gender-btn girl';
+  document.getElementById('btnBoy').className='gender-btn boy';
+
+  // If editing, load existing data
+  if(babyId) {
+    getBaby(babyId).then(baby => {
+      if(baby) {
+        document.getElementById('sName').value = baby.babyName || '';
+        document.getElementById('sDob').value = baby.dob || '';
+        document.getElementById('sBlood').value = baby.blood || '';
+        document.getElementById('sMum').value = baby.mumName || '';
+        document.getElementById('sClinic').value = baby.clinic || '';
+        if(baby.gender) selectGender(baby.gender);
+      }
+    });
+  }
+  showScreen('setupScreen');
+}
+
+function selectGender(g) {
+  gender = g;
   document.getElementById('btnGirl').className='gender-btn girl'+(g==='girl'?' selected':'');
   document.getElementById('btnBoy').className='gender-btn boy'+(g==='boy'?' selected':'');
 }
 
-async function launch(){
-  const name=document.getElementById('sName').value.trim();
-  const dobV=document.getElementById('sDob').value;
+async function saveBaby() {
+  const name = document.getElementById('sName').value.trim();
+  const dobV = document.getElementById('sDob').value;
   if(!name){alert("Please enter your baby's name.");return;}
   if(!dobV){alert("Please enter your baby's date of birth.");return;}
   if(!gender){alert("Please select the sex of your baby.");return;}
 
-  DOB=new Date(dobV+'T00:00:00');
-  VAX=[...VAX_BASE,...(gender==='girl'?VAX_GIRL:[])];
-  given=new Array(VAX.length).fill(false);
-  hospitals=new Array(VAX.length).fill('');
+  const id = editingBabyId || uid();
+  let existingBaby = null;
+  if(editingBabyId) {
+    existingBaby = await getBaby(editingBabyId);
+  }
 
-  // Save profile to IndexedDB
-  try{
-    await saveToDB({
-      babyName:name,dob:dobV,gender,
-      blood:document.getElementById('sBlood').value.trim(),
-      mumName:document.getElementById('sMum').value.trim(),
-      clinic:document.getElementById('sClinic').value.trim(),
-      givenState:given,hospitalState:hospitals
-    });
-  }catch(e){console.log('Save error:',e);}
+  const vax = [...VAX_BASE,...(gender==='girl'?VAX_GIRL:[])];
+  const baby = {
+    id,
+    babyName: name,
+    dob: dobV,
+    gender,
+    blood: document.getElementById('sBlood').value.trim(),
+    mumName: document.getElementById('sMum').value.trim(),
+    clinic: document.getElementById('sClinic').value.trim(),
+    givenState: existingBaby ? existingBaby.givenState || new Array(vax.length).fill(false) : new Array(vax.length).fill(false),
+    hospitalState: existingBaby ? existingBaby.hospitalState || new Array(vax.length).fill('') : new Array(vax.length).fill(''),
+    createdAt: existingBaby ? existingBaby.createdAt : Date.now()
+  };
 
-  const icon=gender==='girl'?'👧':'👦';
-  const blood=document.getElementById('sBlood').value.trim();
-  const mum=document.getElementById('sMum').value.trim();
-  document.getElementById('tName').innerHTML=`${icon} ${name}'s Vaccine Tracker`;
-  document.getElementById('tDob').textContent=`Born ${fmt(DOB)}${blood?' · '+blood:''}`;
-  document.getElementById('tHeader').className=`t-header ${gender}`;
-  document.getElementById('tFooter').innerHTML=`MamaShield · Blessing's Vestule 🛡️<br/>Nigerian NPI Schedule 2025–2026${mum?'<br/>Mum: '+mum:''}`;
+  await saveBabyToDB(baby);
+  editingBabyId = null;
 
-  buildCards();
-  document.getElementById('setupScreen').style.display='none';
-  document.getElementById('tracker').style.display='block';
-  window.scrollTo({top:0,behavior:'smooth'});
+  // Go to this baby's tracker
+  await openBaby(id);
 }
 
-function buildCards(){
-  const body=document.getElementById('tBody');body.innerHTML='';
-  const groups={};
-  VAX.forEach((v,i)=>{if(!groups[v.age])groups[v.age]=[];groups[v.age].push(i);});
+// ── OPEN BABY TRACKER ──
+async function openBaby(id) {
+  const baby = await getBaby(id);
+  if(!baby) { goHome(); return; }
+
+  currentBabyId = id;
+  currentDOB = new Date(baby.dob + 'T00:00:00');
+  currentGender = baby.gender || '';
+  currentVAX = [...VAX_BASE,...(currentGender==='girl'?VAX_GIRL:[])];
+  currentGiven = baby.givenState || new Array(currentVAX.length).fill(false);
+  currentHospitals = baby.hospitalState || new Array(currentVAX.length).fill('');
+
+  // Pad arrays
+  while(currentGiven.length < currentVAX.length) currentGiven.push(false);
+  while(currentHospitals.length < currentVAX.length) currentHospitals.push('');
+
+  const icon = currentGender==='girl'?'👧':currentGender==='boy'?'👦':'👶';
+  document.getElementById('tName').innerHTML = `${icon} ${baby.babyName}`;
+  document.getElementById('tDob').textContent = `Born ${fmt(currentDOB)}${baby.blood?' · '+baby.blood:''}`;
+  document.getElementById('tHeader').className = `t-header ${currentGender||'neutral'}`;
+
+  buildCards();
+  showScreen('tracker');
+}
+
+// ── BUILD VACCINE CARDS ──
+function buildCards() {
+  const body = document.getElementById('tBody');
+  body.innerHTML = '';
+  const groups = {};
+  currentVAX.forEach((v,i)=>{if(!groups[v.age])groups[v.age]=[];groups[v.age].push(i);});
+
   Object.entries(groups).forEach(([age,idxs])=>{
-    const dueDate=addD(DOB,VAX[idxs[0]].days);
-    const allGiven=idxs.every(i=>given[i]);
-    const anyMissed=idxs.some(i=>getState(i)==='missed');
-    const anySoon=idxs.some(i=>getState(i)==='soon');
-    let ageStatus='';
+    const dueDate = addD(currentDOB, currentVAX[idxs[0]].days);
+    const allGiven = idxs.every(i=>currentGiven[i]);
+    const anyMissed = idxs.some(i=>getState(i)==='missed');
+    const anySoon = idxs.some(i=>getState(i)==='soon');
+    let ageStatus = '';
     if(allGiven) ageStatus=`<span style="font-size:11px;font-weight:700;color:var(--given);margin-left:auto">✓ All given</span>`;
     else if(anyMissed) ageStatus=`<span style="font-size:11px;font-weight:700;color:var(--missed);margin-left:auto">⚠️ Overdue</span>`;
     else if(anySoon) ageStatus=`<span style="font-size:11px;font-weight:700;color:var(--soon);margin-left:auto">Due soon</span>`;
-    const grp=document.createElement('div');
-    grp.className='age-group';grp.id=`grp-${age.replace(/[\s()]/g,'-')}`;
-    grp.innerHTML=`<div class="age-header"><span class="age-pill ${gender}">${age}</span><span class="age-date">${fmt(dueDate)}</span>${ageStatus}</div>`;
-    if(VAX[idxs[0]].hpv){const n=document.createElement('div');n.className='hpv-note';n.textContent='👧 Girls only. Protects against cervical cancer. Free at government health centres. Confirm with your doctor.';grp.appendChild(n);}
+
+    const grp = document.createElement('div');
+    grp.className='age-group'; grp.id=`grp-${age.replace(/[\s()]/g,'-')}`;
+    grp.innerHTML=`<div class="age-header"><span class="age-pill ${currentGender||'neutral'}">${age}</span><span class="age-date">${fmt(dueDate)}</span>${ageStatus}</div>`;
+
+    if(currentVAX[idxs[0]].hpv){
+      const n=document.createElement('div');n.className='hpv-note';
+      n.textContent='👧 Girls only. Protects against cervical cancer. Free at government health centres. Confirm with your doctor.';
+      grp.appendChild(n);
+    }
+
     idxs.forEach(i=>{
-      const v=VAX[i],state=getState(i),dd=addD(DOB,v.days);
-      const card=document.createElement('div');card.className=`vcard ${state}`;card.id=`vc${i}`;
-      card.innerHTML=`<button class="give-btn" id="btn${i}" onclick="tapGiven(${i})" title="Tap when given">${given[i]?'✓':'💉'}</button><div class="vinfo"><div class="vname">${v.name}</div><div class="vprotects">${v.protects}</div><div id="chip${i}">${chip(state,dd)}</div><div class="hosp-wrap ${given[i]?'open':''}" id="hw${i}"><input class="hosp-input" type="text" placeholder="Which clinic gave this? (optional)" value="${hospitals[i]}" onchange="hospitals[${i}]=this.value;saveState()" id="hi${i}"/></div></div>`;
+      const v=currentVAX[i], state=getState(i), dd=addD(currentDOB,v.days);
+      const card=document.createElement('div');
+      card.className=`vcard ${state}`; card.id=`vc${i}`;
+      card.innerHTML=`<button class="give-btn" id="btn${i}" onclick="tapGiven(${i})" title="Tap when given">${currentGiven[i]?'✓':'💉'}</button><div class="vinfo"><div class="vname">${v.name}</div><div class="vprotects">${v.protects}</div><div id="chip${i}">${chip(state,dd)}</div><div class="hosp-wrap ${currentGiven[i]?'open':''}" id="hw${i}"><input class="hosp-input" type="text" placeholder="Which clinic gave this? (optional)" value="${currentHospitals[i]||''}" onchange="currentHospitals[${i}]=this.value;saveCurrentState()" id="hi${i}"/></div></div>`;
       grp.appendChild(card);
     });
     body.appendChild(grp);
@@ -592,118 +822,90 @@ function buildCards(){
   updateSummary();
 }
 
-async function tapGiven(i){
-  given[i]=!given[i];
-  const state=getState(i),dd=addD(DOB,VAX[i].days);
+async function tapGiven(i) {
+  currentGiven[i] = !currentGiven[i];
+  const state=getState(i), dd=addD(currentDOB,currentVAX[i].days);
   const card=document.getElementById(`vc${i}`);
   card.className=`vcard ${state}`;
-  document.getElementById(`btn${i}`).textContent=given[i]?'✓':'💉';
+  document.getElementById(`btn${i}`).textContent=currentGiven[i]?'✓':'💉';
   document.getElementById(`chip${i}`).innerHTML=chip(state,dd);
   const hw=document.getElementById(`hw${i}`);
-  hw.className=`hosp-wrap ${given[i]?'open':''}`;
-  if(given[i]) setTimeout(()=>{const inp=document.getElementById(`hi${i}`);if(inp)inp.focus();},320);
-  const age=VAX[i].age;
-  const idxs=VAX.map((v,j)=>v.age===age?j:-1).filter(j=>j>=0);
-  const allGiven=idxs.every(j=>given[j]),anyMissed=idxs.some(j=>getState(j)==='missed'),anySoon=idxs.some(j=>getState(j)==='soon');
+  hw.className=`hosp-wrap ${currentGiven[i]?'open':''}`;
+  if(currentGiven[i]) setTimeout(()=>{const inp=document.getElementById(`hi${i}`);if(inp)inp.focus();},320);
+
+  const age=currentVAX[i].age;
+  const idxs=currentVAX.map((v,j)=>v.age===age?j:-1).filter(j=>j>=0);
+  const allGiven=idxs.every(j=>currentGiven[j]),anyMissed=idxs.some(j=>getState(j)==='missed'),anySoon=idxs.some(j=>getState(j)==='soon');
   const grp=document.getElementById(`grp-${age.replace(/[\s()]/g,'-')}`);
   if(grp){
     const spans=grp.querySelector('.age-header').querySelectorAll('span');
     const last=spans[spans.length-1];
-    if(allGiven) last.outerHTML=`<span style="font-size:11px;font-weight:700;color:var(--given);margin-left:auto">✓ All given</span>`;
-    else if(anyMissed) last.outerHTML=`<span style="font-size:11px;font-weight:700;color:var(--missed);margin-left:auto">⚠️ Overdue</span>`;
-    else if(anySoon) last.outerHTML=`<span style="font-size:11px;font-weight:700;color:var(--soon);margin-left:auto">Due soon</span>`;
+    if(allGiven)last.outerHTML=`<span style="font-size:11px;font-weight:700;color:var(--given);margin-left:auto">✓ All given</span>`;
+    else if(anyMissed)last.outerHTML=`<span style="font-size:11px;font-weight:700;color:var(--missed);margin-left:auto">⚠️ Overdue</span>`;
+    else if(anySoon)last.outerHTML=`<span style="font-size:11px;font-weight:700;color:var(--soon);margin-left:auto">Due soon</span>`;
     else last.outerHTML=`<span style="font-size:11px;font-weight:700;color:transparent;margin-left:auto">—</span>`;
   }
   updateSummary();
-  await saveState();
+  await saveCurrentState();
 }
 
-async function saveState(){
-  try{
-    const name=document.getElementById('tName').textContent.replace(/👧|👦/g,'').replace("'s Vaccine Tracker",'').trim();
-    const dobV=document.getElementById('sDob').value;
-    await saveToDB({
-      babyName:name,dob:dobV,gender,
-      blood:document.getElementById('sBlood').value||'',
-      mumName:document.getElementById('sMum').value||'',
-      clinic:document.getElementById('sClinic').value||'',
-      givenState:given,hospitalState:hospitals
-    });
-  }catch(e){console.log('State save error:',e);}
+async function saveCurrentState() {
+  if(!currentBabyId) return;
+  try {
+    const baby = await getBaby(currentBabyId);
+    if(baby) {
+      baby.givenState = currentGiven;
+      baby.hospitalState = currentHospitals;
+      await saveBabyToDB(baby);
+    }
+  } catch(e){ console.log('Save error:',e); }
 }
 
-function updateSummary(){
-  const g=given.filter(Boolean).length;
-  const m=VAX.filter((_,i)=>getState(i)==='missed').length;
-  const p=VAX.filter((_,i)=>!given[i]).length;
+function updateSummary() {
+  const g=currentGiven.filter(Boolean).length;
+  const m=currentVAX.filter((_,i)=>getState(i)==='missed').length;
+  const p=currentVAX.filter((_,i)=>!currentGiven[i]).length;
   document.getElementById('sGiven').textContent=g;
   document.getElementById('sMissed').textContent=m;
   document.getElementById('sPending').textContent=p;
-  document.getElementById('tProgNum').textContent=`${g} / ${VAX.length} given`;
-  document.getElementById('tProgFill').style.width=`${Math.round(g/VAX.length*100)}%`;
+  document.getElementById('tProgNum').textContent=`${g} / ${currentVAX.length} given`;
+  document.getElementById('tProgFill').style.width=`${Math.round(g/currentVAX.length*100)}%`;
 }
 
-function editProfile(){
-  document.getElementById('tracker').style.display='none';
-  document.getElementById('setupScreen').style.display='block';
-  window.scrollTo({top:0,behavior:'smooth'});
+function editCurrentBaby() {
+  showSetup(currentBabyId);
 }
 
-async function clearData(){
-  if(confirm('This will permanently erase all your baby\'s data from this device. Are you sure?')){
-    try{
-      await clearDB();
-      given=[];hospitals=[];VAX=[];gender='';DOB=null;
-      ['sName','sDob','sMum','sClinic','sBlood'].forEach(id=>document.getElementById(id).value='');
-      document.getElementById('btnGirl').className='gender-btn girl';
-      document.getElementById('btnBoy').className='gender-btn boy';
-      ['c1','c2','c3','c4'].forEach(id=>document.getElementById(id).checked=false);
-      document.getElementById('proceedBtn').disabled=true;
-      document.getElementById('tracker').style.display='none';
-      document.getElementById('setupScreen').style.display='none';
-      document.getElementById('consentScreen').style.display='block';
-      document.getElementById('storageNotice').classList.remove('show');
-      window.scrollTo({top:0,behavior:'smooth'});
-      alert('Your data has been cleared.');
-    }catch(e){alert('Error clearing data. Please try again.');}
+async function deleteCurrentBaby() {
+  const baby = await getBaby(currentBabyId);
+  const name = baby ? baby.babyName : 'this baby';
+  if(confirm(`Remove ${name}'s profile? This will permanently erase all their vaccine data.`)) {
+    await deleteBabyFromDB(currentBabyId);
+    currentBabyId = null;
+    goHome();
   }
 }
 
-// ── Auto-load saved data on startup ──
-async function init(){
-  try{
-    DB=await openDB();
-    const saved=await loadFromDB();
-    if(saved && saved.babyName && saved.dob){
-      // Skip consent and setup — go straight to tracker
-      DOB=new Date(saved.dob+'T00:00:00');
-      gender=saved.gender||'';
-      VAX=[...VAX_BASE,...(gender==='girl'?VAX_GIRL:[])];
-      given=saved.givenState||new Array(VAX.length).fill(false);
-      hospitals=saved.hospitalState||new Array(VAX.length).fill('');
-      // Pad arrays if VAX length changed
-      while(given.length<VAX.length) given.push(false);
-      while(hospitals.length<VAX.length) hospitals.push('');
-      const icon=gender==='girl'?'👧':'👦';
-      document.getElementById('tName').innerHTML=`${icon} ${saved.babyName}'s Vaccine Tracker`;
-      document.getElementById('tDob').textContent=`Born ${fmt(DOB)}${saved.blood?' · '+saved.blood:''}`;
-      document.getElementById('tHeader').className=`t-header ${gender}`;
-      document.getElementById('tFooter').innerHTML=`MamaShield · Blessing's Vestule 🛡️<br/>Nigerian NPI Schedule 2025–2026${saved.mumName?'<br/>Mum: '+saved.mumName:''}`;
-      // Pre-fill setup fields for edit
-      document.getElementById('sName').value=saved.babyName||'';
-      document.getElementById('sDob').value=saved.dob||'';
-      document.getElementById('sBlood').value=saved.blood||'';
-      document.getElementById('sMum').value=saved.mumName||'';
-      document.getElementById('sClinic').value=saved.clinic||'';
-      if(gender) selectGender(gender);
-      buildCards();
-      document.getElementById('consentScreen').style.display='none';
-      document.getElementById('tracker').style.display='block';
+// ── INIT ──
+async function init() {
+  DB = await openDB();
+
+  // Check if consent already given
+  try {
+    const consent = await getBaby('__consent__');
+    if(consent && consent.given) {
+      // Consent already given — go straight to home
+      showScreen('homeScreen');
+      await renderHome();
+      return;
     }
-  }catch(e){console.log('Init error:',e);}
+  } catch(e){}
+
+  // Show consent screen
+  showScreen('consentScreen');
 }
 
-document.getElementById('sDob').max=new Date().toISOString().split('T')[0];
+document.getElementById('sDob').max = new Date().toISOString().split('T')[0];
 init();
 </script>
 </body>
