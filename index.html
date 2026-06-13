@@ -564,4 +564,27 @@ function tapGiven(i){
     if(allGiven)last.outerHTML=`<span style="font-size:11px;font-weight:700;color:var(--given);margin-left:auto">✓ All given</span>`;
     else if(anyMissed)last.outerHTML=`<span style="font-size:11px;font-weight:700;color:var(--missed);margin-left:auto">⚠️ Overdue</span>`;
     else if(anySoon)last.outerHTML=`<span style="font-size:11px;font-weight:700;color:var(--soon);margin-left:auto">Due soon</span>`;
-    else last.outerHTML=`<span style="font
+    else last.outerHTML=`<span style="font-size:11px;font-weight:700;color:transparent;margin-left:auto">—</span>`;}
+  // refresh gcal list
+  const nameEl=document.getElementById('tName');if(nameEl)buildGCalList(nameEl.textContent.replace(/👧|👦/g,'').replace("'s Vaccine Tracker",'').trim());
+  updateSummary();
+}
+function updateSummary(){
+  const g=given.filter(Boolean).length,m=VAX.filter((_,i)=>getState(i)==='missed').length,p=VAX.filter((_,i)=>!given[i]).length;
+  document.getElementById('sGiven').textContent=g;document.getElementById('sMissed').textContent=m;document.getElementById('sPending').textContent=p;
+  document.getElementById('tProgNum').textContent=`${g} / ${VAX.length} given`;
+  document.getElementById('tProgFill').style.width=`${Math.round(g/VAX.length*100)}%`;
+}
+function reset(){
+  given=[];hospitals=[];VAX=[];gender='';
+  ['sName','sDob','sMum','sClinic','sBlood'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('btnGirl').className='gender-btn girl';document.getElementById('btnBoy').className='gender-btn boy';
+  ['c1','c2','c3','c4'].forEach(id=>document.getElementById(id).checked=false);
+  document.getElementById('proceedBtn').disabled=true;
+  document.getElementById('tracker').style.display='none';document.getElementById('setupScreen').style.display='none';document.getElementById('consentScreen').style.display='block';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+document.getElementById('sDob').max=new Date().toISOString().split('T')[0];
+</script>
+</body>
+</html>
