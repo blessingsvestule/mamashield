@@ -355,7 +355,7 @@ input:focus,select:focus{border-color:var(--teal2);box-shadow:0 0 0 3px rgba(42,
     <div class="sum missed"><div class="sum-n" id="sMissed">0</div><div class="sum-l">Missed ⚠️</div></div>
     <div class="sum upcoming"><div class="sum-n" id="sPending">0</div><div class="sum-l">Upcoming</div></div>
   </div>
-  <div class="locked-section">
+  <div class="locked-section" id="lockedSection">
     <div class="locked-card">
       <p class="locked-title">📅 Never miss a vaccine date</p>
       <p class="locked-sub">Add every appointment to Google Calendar with automatic sound alerts — plus unlimited babies, personalised PDF tracker, and missed vaccine guide.</p>
@@ -370,7 +370,7 @@ input:focus,select:focus{border-color:var(--teal2);box-shadow:0 0 0 3px rgba(42,
         <div class="locked-blur-row"><span class="locked-blur-text">6 Weeks — vaccines due</span><span class="locked-blur-btn">+ Add to Calendar</span></div>
         <div class="locked-blur-row"><span class="locked-blur-text">10 Weeks — vaccines due</span><span class="locked-blur-btn">+ Add to Calendar</span></div>
       </div>
-      <button class="unlock-btn" onclick="window.open('http://eepurl.com/-mRhcUQG_K','_blank')">🎁 Get Full Bundle FREE →</button>
+      <button class="unlock-btn" onclick="claimFreeAccess()">🎁 Get Full Bundle FREE →</button>
       <p class="unlock-price">FREE for a limited time · Just enter your email · Instant access</p>
     </div>
   </div>
@@ -476,6 +476,57 @@ async function goHome(){
   await renderHome();
 }
 
+async function isUnlocked(){
+  try{const flag=await dbGet('__unlocked__');return!!(flag&&flag.unlocked);}catch(e){return false;}
+}
+
+async function claimFreeAccess(){
+  await dbPut({id:'__unlocked__',unlocked:true,claimedAt:Date.now()});
+  window.open('http://eepurl.com/-mRhcUQG_K','_blank');
+  // Refresh whichever screen is visible so it reflects unlocked state immediately
+  if(document.getElementById('homeScreen').classList.contains('active')) await renderHome();
+  if(document.getElementById('trackerScreen').style.display==='block') await renderLockedSection();
+}
+
+async function renderLockedSection(){
+  const section=document.getElementById('lockedSection');
+  if(!section)return;
+  const unlocked=await isUnlocked();
+  if(unlocked){
+    section.innerHTML=`<div class="locked-card" style="filter:none">
+      <p class="locked-title">✅ You have full access!</p>
+      <p class="locked-sub">You already claimed your free MamaShield Pro bundle. Open it anytime using the link below — unlimited babies, Google Calendar reminders, personalised PDF tracker, and the missed vaccine guide.</p>
+      <button class="unlock-btn" onclick="window.open('https://blessingsvestule.github.io/mamashield-pro','_blank')">🛡️ Open MamaShield Pro →</button>
+      <p class="unlock-price">Bookmark this link or save MamaShield Pro to your home screen</p>
+    </div>`;
+  }
+}
+
+async function renderUpgradeBanner(addSection,babiesCount){
+  const unlocked=await isUnlocked();
+  if(unlocked){
+    addSection.innerHTML=`<div class="upgrade-banner" style="background:linear-gradient(135deg,#1E7A50,#0D4A2E)">
+      <p class="upgrade-title">✅ You have full access!</p>
+      <p class="upgrade-sub">You already claimed your free MamaShield Pro bundle — unlimited babies, Google Calendar reminders, and more.</p>
+      <button class="upgrade-btn" onclick="window.open('https://blessingsvestule.github.io/mamashield-pro','_blank')">🛡️ Open MamaShield Pro →</button>
+      <p class="upgrade-price">Bookmark this link for instant access anytime</p>
+    </div>`;
+  } else {
+    addSection.innerHTML=`<div class="upgrade-banner">
+      <p class="upgrade-title">👶 Have another baby to track?</p>
+      <p class="upgrade-sub">The free version tracks 1 baby. Upgrade to MamaShield Full Bundle for unlimited babies plus Google Calendar reminders and more.</p>
+      <div class="upgrade-features">
+        <div class="upgrade-feat"><span>👶</span><span>Unlimited baby profiles</span></div>
+        <div class="upgrade-feat"><span>🔔</span><span>Google Calendar reminders with sound</span></div>
+        <div class="upgrade-feat"><span>📋</span><span>Personalised printable PDF tracker</span></div>
+        <div class="upgrade-feat"><span>📖</span><span>Missed vaccine catch-up guide</span></div>
+      </div>
+      <button class="upgrade-btn" onclick="claimFreeAccess()">🎁 Get It FREE →</button>
+      <p class="upgrade-price">FREE for a limited time · Just enter your email</p>
+    </div>`;
+  }
+}
+
 async function renderHome(){
   const all=await dbGetAll();
   const babies=getBabies(all);
@@ -514,18 +565,7 @@ async function renderHome(){
     btn.addEventListener('click',()=>showSetup());
     addSection.appendChild(btn);
   } else {
-    addSection.innerHTML=`<div class="upgrade-banner">
-      <p class="upgrade-title">👶 Have another baby to track?</p>
-      <p class="upgrade-sub">The free version tracks 1 baby. Upgrade to MamaShield Full Bundle for unlimited babies plus Google Calendar reminders and more.</p>
-      <div class="upgrade-features">
-        <div class="upgrade-feat"><span>👶</span><span>Unlimited baby profiles</span></div>
-        <div class="upgrade-feat"><span>🔔</span><span>Google Calendar reminders with sound</span></div>
-        <div class="upgrade-feat"><span>📋</span><span>Personalised printable PDF tracker</span></div>
-        <div class="upgrade-feat"><span>📖</span><span>Missed vaccine catch-up guide</span></div>
-      </div>
-      <button class="upgrade-btn" onclick="window.open('http://eepurl.com/-mRhcUQG_K','_blank')">🔓 Upgrade — ₦2,500</button>
-      <p class="upgrade-price">FREE for a limited time · Just enter your email</p>
-    </div>`;
+    await renderUpgradeBanner(addSection,babies.length);
   }
 }
 
@@ -602,6 +642,7 @@ async function openBaby(id){
   document.getElementById('tHeader').className=`t-header ${currentGender||'neutral'}`;
   buildCards();
   showScreen('tracker');
+  await renderLockedSection();
 }
 
 function getState(i){
